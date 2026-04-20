@@ -1,0 +1,18 @@
+# OS junk
+desktop.ini
+.DS_Store
+__MACOSX/
+
+# Build files
+build/
+*.exe
+*.out
+*.o
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake-build-*/
+
+# VS Code (optional)
+.vscode/
