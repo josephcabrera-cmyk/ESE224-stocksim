@@ -14,5 +14,13 @@ CMakeFiles/
 CMakeCache.txt
 cmake-build-*/
 
+# Output files (keep folder)
+output/*
+!output/.gitkeep
+
+# Logs / temp
+*.log
+*.tmp
+
 # VS Code (optional)
 .vscode/
