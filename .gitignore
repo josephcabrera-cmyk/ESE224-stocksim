@@ -1,0 +1,35 @@
+# 🔧 Build directories
+/build/
+/cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+
+# 🧱 Compiled objects / binaries
+*.o
+*.obj
+*.exe
+*.out
+*.app
+stocksim
+
+# 🧠 Debug / logs
+*.log
+
+# 🖥️ OS junk
+.DS_Store
+Thumbs.db
+
+# 🧰 IDEs
+.vscode/
+.idea/
+
+# 🔁 Temporary files
+*.tmp
+*.swp
+
+# 🚫 Don’t ignore these (IMPORTANT for your class)
+!data/
+!report/
+!output/
