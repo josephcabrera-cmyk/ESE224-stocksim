@@ -44,3 +44,10 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 
 <!-- Add more entries above this line -->
 
+What libaries to read files?
+-Fstream, sstream
+
+What variables should I reference from the csv?
+-data
+
+Should I take into consideration of different columns in PriceHistory.cpp or CSVParser.cpp?
