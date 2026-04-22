@@ -71,3 +71,63 @@ PriceNode* PriceHistory::getHead() const{
     return head;
 }
 
+PriceNode* PriceHistory::getTail() const {
+    return tail;
+}
+
+int PriceHistory::getSize() const {
+    return size;
+}
+
+
+//move forward iterator
+PriceHistory::Iterator::Iterator(PriceNode* node) : current(node){}
+PriceHistory:: Iterator& PriceHistory::Iterator::operator++(){
+    if (current != nullptr) {
+        current = current->next;
+    }    
+    return *this;
+}
+
+PriceNode& PriceHistory::Iterator::operator*() {
+    return *current;
+}
+
+bool PriceHistory::Iterator::operator!=(const Iterator& other) const {
+    return current != other.current;
+}
+
+PriceHistory::Iterator PriceHistory::begin() const {
+    return Iterator(head);
+}
+
+PriceHistory::Iterator PriceHistory::end() const {
+    return Iterator(nullptr);
+}
+
+
+//reverse iterator
+PriceHistory::ReverseIterator::ReverseIterator(PriceNode* node) : current(node) {}
+
+PriceHistory::ReverseIterator& PriceHistory::ReverseIterator::operator++() {
+    if (current != nullptr) {
+        current = current->prev;
+    }
+    return *this;
+}
+
+PriceNode& PriceHistory::ReverseIterator::operator*() {
+    return *current;
+}
+
+bool PriceHistory::ReverseIterator::operator!=(const ReverseIterator& other) const {
+    return current != other.current;
+}
+
+PriceHistory::ReverseIterator PriceHistory::rbegin() const {
+    return ReverseIterator(tail);
+}
+
+PriceHistory::ReverseIterator PriceHistory::rend() const {
+    return ReverseIterator(nullptr);
+}
