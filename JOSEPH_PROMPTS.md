@@ -30,15 +30,18 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 
 ## Prompts
 
-### Section: \[replace with section name]
+### Section: Stock.cpp
 
-**Prompt:**
-
+**Prompt:** Please implement the constructor and destructor for Stock.cpp
 
 
 **What you changed / why (optional):**
 
+**Prompt:** How do we print the number of trading days loaded for loadFromCSV.
 
+**Prompt:** why am I getting an error on const override in Stock.cpp?
+
+**Prompt:** 
 
 \---
 
