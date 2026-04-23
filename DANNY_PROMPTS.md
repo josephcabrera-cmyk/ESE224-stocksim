@@ -51,3 +51,7 @@ What variables should I reference from the csv?
 -data
 
 Should I take into consideration of different columns in PriceHistory.cpp or CSVParser.cpp?
+-CSVParser.cpp
+
+How do I catch errors of any type?
+-Use catch(...)
