@@ -11,6 +11,7 @@ TradeStack::~TradeStack() {
     }
 }
 
+//push
 void TradeStack::push(const TradeRecord& record) {
     StackNode* newNode = new StackNode;
     newNode->data = record;
@@ -19,6 +20,7 @@ void TradeStack::push(const TradeRecord& record) {
     size++;
 }
 
+//pop
 TradeRecord TradeStack::pop() {
     if (isEmpty()) {
         cout << "Error:" << endl;
