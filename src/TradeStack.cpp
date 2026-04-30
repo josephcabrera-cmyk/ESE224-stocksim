@@ -42,13 +42,25 @@ TradeRecord TradeStack::peek() const {
 }
 
 bool TradeStack::isEmpty() const{
-
+    return top == nullptr;
 }
 
 int TradeStack::getSize() const {
-
+    return size;
 }
 
 void TradeStack:: printAll() const{
-    
+    StackNode* current = top;
+
+    while(current != nullptr) {
+        cout << "Date: " <<current->data.date
+         << " | Action: " << current->data.action
+             << " | Ticker: " << current->data.ticker
+             << " | Shares: " << current->data.shares
+             << " | Price: " << current->data.price
+             << " | Total: " << current->data.totalCost
+             << endl;
+
+        current = current->next;
+    }
 }
