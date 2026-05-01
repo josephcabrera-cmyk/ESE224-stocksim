@@ -100,7 +100,7 @@ void Stock::printSummary() const {
         << history->getTail()->date << endl;
     cout << "total trading days: " << history->getSize() << endl;
     cout << "overall return (first to last price): " << (history->getTail()->close
-        - history->getHead()->close) / history->getHead()->close * 100;
+        - history->getHead()->close) / history->getHead()->close * 100 << endl;
 }
 
 string Stock::getType() const {

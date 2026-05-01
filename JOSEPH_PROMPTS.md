@@ -34,7 +34,6 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 
 **Prompt:** Please implement the constructor and destructor for Stock.cpp
 
-
 **What you changed / why (optional):**
 
 **Prompt:** How do we print the number of trading days loaded for loadFromCSV.
@@ -48,6 +47,18 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 **Prompt:** how do we get the specific year data in getYearStartPrice()?
 
 **Prompt:** how do I know the date range loaded for printSummary()?
+
+### Section: ETF.cpp
+
+**Prompt:** why am I getting the error no instance of overloaded function "ETF::ETF" matches the specified type
+
+**Prompt:** how do we get the year in calculate10YearCAGR? How do we know if there is insufficient data?
+
+**Prompt:** why am I getting name followed by '::' must be a class or namespace name on CSVParser::
+
+**Prompt:** do we rewrite everything in Stock printSummary to ETF?
+
+**Prompt:**
 
 \---
 
