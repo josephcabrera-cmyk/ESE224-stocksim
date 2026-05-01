@@ -41,7 +41,13 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 
 **Prompt:** why am I getting an error on const override in Stock.cpp?
 
-**Prompt:** 
+**Prompt:** the constructor for stock takes ticker, name, and sector. how are we supposed to get price on a date?
+
+**Prompt:** provide me with the skeleton code for getPriceOnDate
+
+**Prompt:** how do we get the specific year data in getYearStartPrice()?
+
+**Prompt:** how do I know the date range loaded for printSummary()?
 
 \---
 
