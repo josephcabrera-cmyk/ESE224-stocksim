@@ -68,7 +68,18 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 
 **Prompt:** what is wrong with my syntax on sortByAnnualReturn
 
+### Section: StockBST.cpp
+
+**Prompt:** why am I getting error identifier "BSTNode" is undefined
+
 **Prompt:**
+
+### Section: Portfolio.cpp
+
+**Prompt:**
+
+**Prompt:**
+
 
 \---
 
