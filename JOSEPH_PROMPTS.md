@@ -58,6 +58,16 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 
 **Prompt:** do we rewrite everything in Stock printSummary to ETF?
 
+### Section: StockManager.h
+
+**Prompt:** in removeAsset, how do I delete the pointer and erase from vector?
+
+**Prompt:** why am I getting an error on assets[i] == getTicker()
+
+**Prompt:** can you give me the correct conditions for removeAsset
+
+**Prompt:** what is wrong with my syntax on sortByAnnualReturn
+
 **Prompt:**
 
 \---
