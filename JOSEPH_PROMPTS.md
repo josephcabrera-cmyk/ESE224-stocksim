@@ -90,7 +90,13 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 
 ### Section: Portfolio.cpp
 
-**Prompt:**
+**Prompt:** Can you give me the pseudocode for buyShares
+
+**Prompt:** Please help me clean up my syntax on buyShares
+
+**Prompt:** Can you check my sellShares logic and make sure it is correct?
+
+**Prompt:** Please help me debug undoLastTrade()
 
 **Prompt:**
 
