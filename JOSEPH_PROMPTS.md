@@ -72,7 +72,21 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 
 **Prompt:** why am I getting error identifier "BSTNode" is undefined
 
-**Prompt:**
+**Prompt:** Can you give me the pseudocode for insertHelper
+
+**Prompt:** How do we use insertHelper in the wrapper?
+
+**Prompt:** Does StockBST::search just call searchHelper? What does it return?
+
+**Prompt:** What are inorder, preorder, and postorder actually supposed to output?
+
+**Prompt:** What is the logic for clearHelper?
+
+**Prompt:** Can you give me the pseudocode for heightHelper
+
+**Prompt:** Can you clarify what is actually being asked for rangeSearch?
+
+**Prompt:** How do we push into a results vector?
 
 ### Section: Portfolio.cpp
 
