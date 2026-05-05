@@ -1,4 +1,4 @@
-#include "../include/CSVParser.h"
+#include "CSVParser.h"
 #include <fstream> //read and write
 #include <sstream> //split
 #include <vector>
