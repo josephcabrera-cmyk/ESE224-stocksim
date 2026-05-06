@@ -112,7 +112,7 @@ void Portfolio::undoLastTrade() {
 
 // Add a pending order to the OrderQueue.
 void Portfolio::queueOrder(const Order& order)  {
-
+    pendingOrders.enqueue(order);
 
 }
 
@@ -122,7 +122,34 @@ void Portfolio::queueOrder(const Order& order)  {
 //   LIMIT SELL   → execute if currentPrice >= order.targetPrice
 // Prints "Order skipped" if LIMIT conditions are not met (order is discarded).
 void Portfolio::executeNextOrder(double currentPrice, const string& date) {
+    if (pendingOrders.isEmpty()) {
+        cout << "No pending orders." << endl;
+        return;
+    }
 
+    Order order = pendingOrders.dequeue();
+
+    bool shouldExecute = false;
+    if (order.type == "MARKET") {
+        shouldExecute = true;
+    } else if (order.type == "LIMIT") {
+        if (order.side == "BUY" && currentPrice <= order.targetPrice) {
+            shouldExecute = true;
+        } else if (order.side == "SELL" && currentPrice >= order.targetPrice) {
+            shouldExecute = true;
+        }
+    }
+
+    if (!shouldExecute) {
+        cout << "Order skipped" << endl;
+        return;
+    }
+
+    if (order.side == "BUY") {
+        buyShares(order.ticker, order.shares, currentPrice, date);
+    } else if (order.side == "SELL") {
+        sellShares(order.ticker, order.shares, currentPrice, date);
+    }
 
 }
 
@@ -130,13 +157,19 @@ void Portfolio::executeNextOrder(double currentPrice, const string& date) {
 
 // Returns the total market value of all positions (sum of shares * currentPrice).
 double Portfolio::getTotalMarketValue() const {
+    double totalMarketValue = 0.0;
 
+    for (int i = 0; i < holdings.size(); i++) {
+        totalMarketValue += holdings[i].shares * holdings[i].currentPrice;
+    }
+
+    return totalMarketValue;
 
 }
 
 // Returns total portfolio value: getTotalMarketValue() + cashBalance.
 double Portfolio::getTotalValue() const {
-
+    return getTotalMarketValue() + cashBalance;
 
 }
 
@@ -144,42 +177,90 @@ double Portfolio::getTotalValue() const {
 //   (totalMarketValue - totalCostBasis) / totalCostBasis * 100
 double Portfolio::getTotalUnrealizedReturn() const {
 
+    double totalMarketValue = 0.0;
+    double totalCostBasis = 0.0;
+
+    for (int i = 0; i < holdings.size(); i++) {
+        totalMarketValue += holdings[i].shares * holdings[i].currentPrice;
+        totalCostBasis += holdings[i].shares * holdings[i].avgCostBasis;
+    }
+
+    if (totalCostBasis == 0.0) {
+        return 0.0;
+    }
+
+    return ((totalMarketValue - totalCostBasis) / totalCostBasis) * 100.0;
+
 }
 
 double Portfolio::getCashBalance() const {
-
+    return cashBalance;
 
 }
 
 // Updates the currentPrice field of a position (called during backtesting).
 void Portfolio::updatePrice(const string& ticker, double newPrice) {
-
+    for (int i = 0; i < holdings.size(); i++) {
+        if (holdings[i].ticker == ticker) {
+            holdings[i].currentPrice = newPrice;
+            return;
+        }
+    }
 
 }
 
 // --- Sorting (uses std::sort with custom comparators) ---
 void Portfolio::sortHoldingsByUnrealizedReturn() {
+    sort(holdings.begin(), holdings.end(), [](const Position& left, const Position& right) {
+        double leftReturn = 0.0;
+        double rightReturn = 0.0;
 
+        if (left.avgCostBasis != 0.0) {
+            leftReturn = ((left.currentPrice - left.avgCostBasis) / left.avgCostBasis) * 100.0;
+        }
+        if (right.avgCostBasis != 0.0) {
+            rightReturn = ((right.currentPrice - right.avgCostBasis) / right.avgCostBasis) * 100.0;
+        }
+
+        return leftReturn > rightReturn;
+    });
 
 }  // descending: best performer first
 
 void Portfolio::sortHoldingsByTicker() {
-
+    sort(holdings.begin(), holdings.end(), [](const Position& left, const Position& right) {
+        return left.ticker < right.ticker;
+    });
 
 }            // alphabetical ascending
 
 // --- Display ---
 void Portfolio::printHoldings() const {
+    cout << "Portfolio for " << ownerName << endl;
+    cout << "Cash Balance: " << cashBalance << endl;
+    cout << "Holdings:" << endl;
 
+    if (holdings.empty()) {
+        cout << "  (none)" << endl;
+        return;
+    }
+
+    for (int i = 0; i < holdings.size(); i++) {
+        cout << "  Ticker: " << holdings[i].ticker
+             << " | Shares: " << holdings[i].shares
+             << " | Avg Cost: " << holdings[i].avgCostBasis
+             << " | Current Price: " << holdings[i].currentPrice
+             << endl;
+    }
 
 }
 
 void Portfolio::printTradeHistory() const {
-
+    tradeHistory.printAll();
 
 }   // delegates to tradeHistory.printAll()
 
 void Portfolio::printPendingOrders() const {
-
+    pendingOrders.printAll();
 
 }  // delegates to pendingOrders.printAll()

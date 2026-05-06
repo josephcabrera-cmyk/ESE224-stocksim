@@ -55,3 +55,5 @@ Should I take into consideration of different columns in PriceHistory.cpp or CSV
 
 How do I catch errors of any type?
 -Use catch(...)
+
+What is CMake on VSCode?

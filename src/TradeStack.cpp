@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../include/TradeStack.h"
+#include "TradeStack.h"
 using namespace std;
 
 //constructor
