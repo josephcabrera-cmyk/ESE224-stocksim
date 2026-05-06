@@ -146,7 +146,9 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 
 **Prompt:** How do we build an order struct for menuQueueOrder?
 
-**Prompt:**
+**Prompt:** How do we use StockManager in main to add stocks and ETFs?
+
+**Prompt:** What are some edge cases that we have to fix for our functions in main.cpp?
 
 
 \---
