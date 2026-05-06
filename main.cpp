@@ -2,8 +2,8 @@
  * ESE 224 – Final Project: StockSim
  * Historical Market Analyzer & Trading Strategy Simulator
  *
- * Student Name : ___________________________
- * Student ID   : ___________________________
+ * Student Names : Joseph Cabrera & Danny Ouyang
+ * Student ID   : 114650793 & __________
  *
  * Instructions:
  *   1. Implement all classes listed in the header files under include/.
@@ -194,34 +194,72 @@ void menuDisplayBST(StockBST& bst) {
 }
 
 void menuAddToPortfolio(Portfolio& portfolio) {
-    // TODO:
-    //  Prompt for ticker, shares, price, date. Call portfolio.buyShares(...).
-    cout << "(TODO: implement menuAddToPortfolio)" << endl;
+    string ticker, date;
+    int shares;
+    double price;
+    cout << "Ticker: ";
+    cin >> ticker;
+    cout << "Shares: ";
+    cin >> shares;
+    cout << "Price: ";
+    cin >> price;
+    cout << "Date (year-month-day format): ";
+    cin >> date;
+    portfolio.buyShares(ticker, shares, price, date);
+    cout << "Bought " << shares << " shares of " << ticker << " at $" << price << "." << endl;
 }
 
 void menuRemoveFromPortfolio(Portfolio& portfolio) {
-    // TODO:
-    //  Prompt for ticker, shares, current price, date. Call portfolio.sellShares(...).
-    cout << "(TODO: implement menuRemoveFromPortfolio)" << endl;
+    string ticker, date;
+    int shares;
+    double price;
+    cout << "Ticker: ";
+    cin >> ticker;
+    cout << "Shares: ";
+    cin >> shares;
+    cout << "Price: ";
+    cin >> price;
+    cout << "Date (year-month-day format): ";
+    cin >> date;
+    portfolio.sellShares(ticker, shares, price, date);
+    cout << "Sold " << shares << " shares of " << ticker << " at $" << price << "." << endl;
 }
 
 void menuQueueOrder(Portfolio& portfolio) {
-    // TODO:
-    //  Prompt for order details (ticker, type, side, target price, shares, date).
-    //  Build an Order struct and call portfolio.queueOrder(order).
-    cout << "(TODO: implement menuQueueOrder)" << endl;
+    string ticker, type, side, date;
+    double targetPrice;
+    int shares;
+    cout << "Ticker: ";
+    cin >> ticker;
+    cout << "Type (MARKET/LIMIT): ";
+    cin >> type;
+    cout << "Side (BUY/SELL): ";
+    cin >> side;
+    cout << "Target Price: ";
+    cin >> targetPrice;
+    cout << "Shares: ";
+    cin >> shares;
+    cout << "Date (year-month-day format): ";
+    cin >> date;
+    Order order = {ticker, type, side, targetPrice, shares, date};
+    portfolio.queueOrder(order);
+    cout << "Order queued." << endl;
 }
 
 void menuExecuteOrder(Portfolio& portfolio) {
-    // TODO:
-    //  Ask for the current market price and today's date.
-    //  Call portfolio.executeNextOrder(currentPrice, date).
-    cout << "(TODO: implement menuExecuteOrder)" << endl;
+    double currentPrice;
+    string date;
+    cout << "Current price: ";
+    cin >> currentPrice;
+    cout << "Date (year-month-day format): ";
+    cin >> date;
+    portfolio.executeNextOrder(currentPrice, date);
+    cout << "Order executed at $" << currentPrice << " on " << date << "." << endl;
 }
 
 void menuUndoTrade(Portfolio& portfolio) {
-    // TODO: Call portfolio.undoLastTrade() and confirm to the user.
-    cout << "(TODO: implement menuUndoTrade)" << endl;
+    portfolio.undoLastTrade();
+    cout << "Previous trade undone." << endl;
 }
 
 void menuRunStrategy(StockManager<ETF>& etfManager, StockManager<Stock>& stockManager) {

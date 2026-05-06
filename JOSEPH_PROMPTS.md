@@ -144,6 +144,10 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 
 ### Section: main.cpp
 
+**Prompt:** How do we build an order struct for menuQueueOrder?
+
+**Prompt:**
+
 
 \---
 
