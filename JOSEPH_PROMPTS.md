@@ -106,8 +106,23 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 
 **Prompt:** How do we return descending for sortHoldingsByUnrealizedReturn()
 
-**Prompt:**
+### Section: DynamicSIPStrategy.cpp
 
+**Prompt:** What is wrong with my constructor for DynamicSIPStrategy
+
+**Prompt:** Does DynamicSIPStrategy have the same structure as FixedSIPStrategy?
+
+**Prompt:** how do we compare against the 12-month rolling high/low to make this dynamic and not fixed
+
+**Prompt:** How do we find the maximum price over a 12 month period?
+
+**Prompt:** How do I make sure the strategy does not go over-budget?
+
+**Prompt:** Help me debug DynamicSIPStrategy it is acting like FixedSIPStrategy for some reason
+
+### Section: GoldenCrossStrategy.cpp
+
+**Prompt:** 
 
 \---
 
