@@ -41,7 +41,7 @@ public:
     // Sell 'shares' of 'ticker' at 'price' on 'date'.
     // Adds to cashBalance. Reduces position (remove if shares reach 0).
     // Pushes a TradeRecord onto tradeHistory. Does nothing if position not found.
-    void sellShares(const string& ticker, int shares, double price, const string& date);
+    bool sellShares(const string& ticker, int shares, double price, const string& date);
 
     // Reverses the most recent trade by popping the TradeStack and
     // performing the opposite transaction (buy→sell, sell→buy).
