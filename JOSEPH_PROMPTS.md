@@ -132,6 +132,19 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 
 **Prompt:** Do I properly address all edge cases in GoldenCrossStrategy?
 
+### Section: MomentumStrategy.cpp
+
+**Prompt:** Please give me the basic shell for MomentumStrategy.cpp based on the header including constructor, backtest, getName, etc.
+
+**Prompt:** What does the header mean when it says "ReverseIterator integration is the key requirement here"?
+
+**Prompt:** how do we scan backwards ~126 trading days on PriceHistory, a doubly linked list?
+
+**Prompt:** Is the shape of the code similar to Golden, just with different conditions?
+
+### Section: main.cpp
+
+
 \---
 
 <!-- Add more entries above this line -->
