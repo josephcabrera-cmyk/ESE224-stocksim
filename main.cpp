@@ -7,6 +7,7 @@
 #include "PriceHistory.h"
 #include "StockBST.h"
 #include "Portfolio.h"
+#include "StockManager.h"
 
 #include "FixedSIPStrategy.h"
 #include "DynamicSIPStrategy.h"
@@ -15,50 +16,20 @@
 
 using namespace std;
 
-// Choose loaded history
-PriceHistory* chooseHistory(Stock& spx, Stock& amzn, Stock& nvda) {
+Stock* chooseStock(StockManager<Stock>& sm, StockManager<ETF>& em) {
     int choice;
-
-    cout << "\nChoose dataset:" << endl;
-    cout << "[1] SPX" << endl;
-    cout << "[2] AMZN" << endl;
-    cout << "[3] NVDA" << endl;
-    cout << "Enter choice: ";
+    cout << "\nChoose stock:\n[1] SPX\n[2] AMZN\n[3] NVDA\nEnter choice: ";
     cin >> choice;
-
-    if (choice == 1) {
-        return spx.getHistory();
-    } else if (choice == 2) {
-        return amzn.getHistory();
-    } else if (choice == 3) {
-        return nvda.getHistory();
-    }
-
-    cout << "Invalid choice. Using SPX by default." << endl;
-    return spx.getHistory();
+    if (choice == 1) return em.findByTicker("SPX");
+    if (choice == 2) return sm.findByTicker("AMZN");
+    if (choice == 3) return sm.findByTicker("NVDA");
+    cout << "Invalid. Using SPX." << endl;
+    return em.findByTicker("SPX");
 }
 
-// Choose stock object
-Stock* chooseStock(Stock& spx, Stock& amzn, Stock& nvda) {
-    int choice;
-
-    cout << "\nChoose stock:" << endl;
-    cout << "[1] SPX" << endl;
-    cout << "[2] AMZN" << endl;
-    cout << "[3] NVDA" << endl;
-    cout << "Enter choice: ";
-    cin >> choice;
-
-    if (choice == 1) {
-        return &spx;
-    } else if (choice == 2) {
-        return &amzn;
-    } else if (choice == 3) {
-        return &nvda;
-    }
-
-    cout << "Invalid choice. Using SPX by default." << endl;
-    return &spx;
+PriceHistory* chooseHistory(StockManager<Stock>& sm, StockManager<ETF>& em) {
+    Stock* s = chooseStock(sm, em);
+    return (s == nullptr) ? nullptr : s->getHistory();
 }
 
 // Get latest close price
@@ -131,9 +102,8 @@ int main() {
     cout << "Enter student ID: ";
     getline(cin, studentID);
 
-    Stock spx("SPX", "S&P 500 Index", "Index");
-    Stock amzn("AMZN", "Amazon Inc.", "Consumer Discretionary");
-    Stock nvda("NVDA", "NVIDIA Corporation", "Technology");
+    StockManager<Stock> stockManager;
+    StockManager<ETF> etfManager;
 
     Portfolio portfolio(studentName, 100000.0);
     StockBST performanceBST;
@@ -164,14 +134,26 @@ int main() {
         cin >> choice;
 
         if (choice == 1) {
-            bool spxLoaded = spx.loadFromCSV("data/SPX.csv");
-            bool amznLoaded = amzn.loadFromCSV("data/AMZN.csv");
-            bool nvdaLoaded = nvda.loadFromCSV("data/NVidia_stock_history.csv");
+            if (dataLoaded) {
+                cout << "Data already loaded." << endl;
+                continue;
+            }
+            ETF* spx = new ETF("SPX", "S&P 500 Index", "Index", 0.0003);
+            Stock* amzn = new Stock("AMZN", "Amazon Inc.", "Consumer Discretionary");
+            Stock* nvda = new Stock("NVDA", "NVIDIA Corporation", "Technology");
+
+            bool spxLoaded = spx->loadFromCSV("data/SPX.csv");
+            bool amznLoaded = amzn->loadFromCSV("data/AMZN.csv");
+            bool nvdaLoaded = nvda->loadFromCSV("data/NVidia_stock_history.csv");
 
             if (spxLoaded && amznLoaded && nvdaLoaded) {
+                etfManager.addAsset(spx);
+                stockManager.addAsset(amzn);
+                stockManager.addAsset(nvda);
                 dataLoaded = true;
                 cout << "All stock data loaded successfully." << endl;
             } else {
+                delete spx; delete amzn; delete nvda;
                 cout << "One or more CSV files failed to load." << endl;
             }
         }
@@ -182,7 +164,7 @@ int main() {
                 continue;
             }
 
-            Stock* stock = chooseStock(spx, amzn, nvda);
+            Stock* stock = chooseStock(stockManager, etfManager);
 
             if (stock->getHistory() == nullptr) {
                 cout << "No history loaded." << endl;
@@ -210,7 +192,7 @@ int main() {
                 continue;
             }
 
-            Stock* stock = chooseStock(spx, amzn, nvda);
+            Stock* stock = chooseStock(stockManager, etfManager);
 
             string startDate;
             string endDate;
@@ -225,6 +207,11 @@ int main() {
         }
 
         else if (choice == 4) {
+            if (!dataLoaded) {
+                cout << "Load data first." << endl;
+                continue;
+            }
+
             double low;
             double high;
 
@@ -243,7 +230,7 @@ int main() {
                 cout << "No BST entries found in that range." << endl;
             }
 
-            for (int i = 0; i < (int)results.size(); i++) {
+            for (size_t i = 0; i < (int)results.size(); i++) {
                 cout << results[i]->ticker
                      << " | Year: " << results[i]->year
                      << " | Return: " << results[i]->key << "%"
@@ -257,7 +244,7 @@ int main() {
                 continue;
             }
 
-            Stock* stock = chooseStock(spx, amzn, nvda);
+            Stock* stock = chooseStock(stockManager, etfManager);
 
             int year;
             cout << "Enter year to calculate return: ";
@@ -304,7 +291,7 @@ int main() {
                 continue;
             }
 
-            Stock* stock = chooseStock(spx, amzn, nvda);
+            Stock* stock = chooseStock(stockManager, etfManager);
 
             int shares;
             cout << "Enter shares to buy: ";
@@ -312,6 +299,10 @@ int main() {
 
             double price = getLatestPrice(stock);
             string date = getLatestDate(stock);
+
+            if (portfolio.getCashBalance() < shares * price) { 
+                cout << "Insufficient cash" << endl; continue;
+            }
 
             portfolio.buyShares(stock->getTicker(), shares, price, date);
             portfolio.updatePrice(stock->getTicker(), price);
@@ -326,7 +317,7 @@ int main() {
                 continue;
             }
 
-            Stock* stock = chooseStock(spx, amzn, nvda);
+            Stock* stock = chooseStock(stockManager, etfManager);
 
             int shares;
             cout << "Enter shares to sell/remove: ";
@@ -335,10 +326,16 @@ int main() {
             double price = getLatestPrice(stock);
             string date = getLatestDate(stock);
 
-            portfolio.sellShares(stock->getTicker(), shares, price, date);
+            bool success = portfolio.sellShares(stock->getTicker(), shares, price, date);
+
+            if (success == true) {
 
             cout << "Sold " << shares << " shares of "
                  << stock->getTicker() << " at " << price << endl;
+            }
+            else {
+                cout << "Insufficient shares" << endl;
+            }
         }
 
         else if (choice == 9) {
@@ -373,7 +370,7 @@ int main() {
                 continue;
             }
 
-            Stock* stock = chooseStock(spx, amzn, nvda);
+            Stock* stock = chooseStock(stockManager, etfManager);
 
             double currentPrice = getLatestPrice(stock);
             string date = getLatestDate(stock);
@@ -392,7 +389,7 @@ int main() {
                 continue;
             }
 
-            PriceHistory* history = chooseHistory(spx, amzn, nvda);
+            PriceHistory* history = chooseHistory(stockManager, etfManager);
 
             double monthlyCapital;
             int startYear;
@@ -482,7 +479,7 @@ int main() {
                 continue;
             }
 
-            PriceHistory* history = chooseHistory(spx, amzn, nvda);
+            PriceHistory* history = chooseHistory(stockManager, etfManager);
 
             double monthlyCapital;
             int startYear;
