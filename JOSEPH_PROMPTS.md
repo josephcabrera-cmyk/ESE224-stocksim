@@ -122,7 +122,15 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 
 ### Section: GoldenCrossStrategy.cpp
 
-**Prompt:** 
+**Prompt:** How do we use CircularQueue for the moving averages 50 and 200?
+
+**Prompt:** How do we "Enqueue today's close into both ma50Queue and ma200Queue"? What does that mean?
+
+**Prompt:** What are the precise conditions that mean "cross"? i.e. greater than or equal, or just greater than?
+
+**Prompt:** How do I prevent the golden/death cross from being triggered at the inital values?
+
+**Prompt:** Do I properly address all edge cases in GoldenCrossStrategy?
 
 \---
 
