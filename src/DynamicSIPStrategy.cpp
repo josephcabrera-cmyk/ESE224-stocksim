@@ -14,7 +14,7 @@ double monthlyCapital, int startYear, int endYear) {
 		return result;
 	}
 
-	int totalMonths = (endYear - startYear) * 12; 
+	int totalMonths = (endYear - startYear+1) * 12; 
 	double totalBudget = totalMonths * monthlyCapital;
 	double remainingBudget = totalBudget;
 
@@ -26,7 +26,7 @@ double monthlyCapital, int startYear, int endYear) {
 
 	int monthsCompleted = 0;
 
-	for (int year = startYear; year < endYear; year++) {
+	for (int year = startYear; year <= endYear; year++) {
 
 		for (int month = 1; month <= 12; month++) {
 
@@ -43,8 +43,7 @@ double monthlyCapital, int startYear, int endYear) {
 				if (nodeYear == year && nodeMonth == month) {
 					double closePrice = current->close;
 
-					int remainingMonths = totalMonths - monthsCompleted;
-					double baseSpend = remainingBudget / remainingMonths;
+					double baseSpend = monthlyCapital;
 					double spend = baseSpend;
 
 					if (recentPrices.size() >= 12) {
