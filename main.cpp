@@ -119,6 +119,67 @@ void printStrategyComparison(const SimResult& r1,
     cout << "Trades: " << r4.totalTrades << endl;
 }
 
+    void parameterSweep(ETF* spy,
+                    double monthlyCapital,
+                    int startYear,
+                    int endYear,
+                    StockBST& bst) {
+
+    cout << "\n===== Dynamic SIP Parameter Sweep =====" << endl;
+
+    for (double dipThreshold = 3.0;
+         dipThreshold <= 20.0;
+         dipThreshold += 1.0) {
+
+        DynamicSIPStrategy strategy(
+            dipThreshold,
+            10.0,
+            2.0
+        );
+
+        SimResult result =
+            strategy.backtest(
+                spy->getHistory(),
+                monthlyCapital,
+                startYear,
+                endYear
+            );
+
+        string label =
+            "dip=" +
+            to_string((int)dipThreshold) +
+            "%";
+
+        bst.insert(
+            label,
+            result.finalValue,
+            0
+        );
+
+        cout << label
+             << " -> Final Value: $"
+             << result.finalValue
+             << endl;
+    }
+
+    cout << "\n===== Ranked Results =====" << endl;
+
+    bst.inorder();
+
+    StockBST::BSTNode* best = bst.findMax();
+
+    if (best != nullptr) {
+        cout << "\n===== BEST THRESHOLD =====" << endl;
+
+        cout << "Strategy: "
+             << best->ticker
+             << endl;
+
+        cout << "Final Value: $"
+             << best->key
+             << endl;
+    }
+}
 // ---------------------------------------------------------------
 // main
 // ---------------------------------------------------------------
@@ -164,6 +225,7 @@ int main() {
         cout << "[13] Compare all strategies head-to-head" << endl;
         cout << "[14] Display portfolio summary" << endl;
         cout << "[15] Display full trade history" << endl;
+        cout << "[16] Run Dynamic SIP Parameter Sweep (BONUS)" << endl;
         cout << " [0] Exit" << endl;
         cout << "Enter choice: ";
         cin >> choice;
@@ -548,6 +610,45 @@ int main() {
 
         else if (choice == 15) {
             portfolio.printTradeHistory();
+        }
+
+         else if (choice == 16) {
+
+            if (!dataLoaded) {
+                cout << "Load data first." << endl;
+                continue;
+            }
+
+            ETF* spy =
+                etfManager.findByTicker("SPX");
+
+            if (spy == nullptr) {
+                cout << "SPX ETF not found." << endl;
+                continue;
+            }
+
+            double monthlyCapital;
+            int startYear;
+            int endYear;
+
+            cout << "Enter monthly capital: ";
+            cin >> monthlyCapital;
+
+            cout << "Enter start year: ";
+            cin >> startYear;
+
+            cout << "Enter end year: ";
+            cin >> endYear;
+
+            StockBST sweepBST;
+
+            parameterSweep(
+                spy,
+                monthlyCapital,
+                startYear,
+                endYear,
+                sweepBST
+            );
         }
 
         else if (choice == 0) {
