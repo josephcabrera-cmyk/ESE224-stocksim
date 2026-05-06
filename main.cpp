@@ -1,18 +1,45 @@
+/*
+ * ESE 224 – Final Project: StockSim
+ * Historical Market Analyzer & Trading Strategy Simulator
+ *
+ * Student Names : Joseph Cabrera & Danny Ouyang
+ * Student IDs   : 
+ *
+ * Instructions:
+ *   1. Implement all classes listed in the header files under include/.
+ *   2. Create corresponding .cpp files in src/ for each header.
+ *   3. Place your Yahoo Finance CSV files in data/ (SPY.csv, AAPL.csv, TSLA.csv).
+ *   4. Complete the menu handlers below — each case should call the relevant
+ *      class methods you implemented.
+ *   5. Do NOT use std::queue, std::stack, std::list, std::map, std::unordered_map,
+ *      or any external library. std::vector, std::string, std::sort are allowed.
+ *
+ * Compile with C++11 or later:
+ *   g++ -std=c++11 -Iinclude src/*.cpp main.cpp -o stocksim
+ */
+
 #include <iostream>
 #include <string>
 #include <vector>
 
-#include "Stock.h"
-#include "ETF.h"
-#include "PriceHistory.h"
-#include "StockBST.h"
-#include "Portfolio.h"
-#include "StockManager.h"
-
-#include "FixedSIPStrategy.h"
-#include "DynamicSIPStrategy.h"
-#include "GoldenCrossStrategy.h"
-#include "MomentumStrategy.h"
+// Include all your headers here once implemented
+#include "include/FinancialAsset.h"
+#include "include/PriceNode.h"
+#include "include/PriceHistory.h"
+#include "include/CSVParser.h"
+#include "include/Stock.h"
+#include "include/ETF.h"
+#include "include/CircularQueue.h"
+#include "include/TradeStack.h"
+#include "include/OrderQueue.h"
+#include "include/StockBST.h"
+#include "include/Portfolio.h"
+#include "include/TradingStrategy.h"
+#include "include/FixedSIPStrategy.h"
+#include "include/DynamicSIPStrategy.h"
+#include "include/GoldenCrossStrategy.h"
+#include "include/MomentumStrategy.h"
+#include "include/StockManager.h"
 
 using namespace std;
 
@@ -92,25 +119,33 @@ void printStrategyComparison(const SimResult& r1,
     cout << "Trades: " << r4.totalTrades << endl;
 }
 
+// ---------------------------------------------------------------
+// main
+// ---------------------------------------------------------------
 int main() {
-    string studentName;
-    string studentID;
-
-    cout << "Enter student name: ";
+    // --- Student login ---
+    string studentName, studentID;
+    cout << "========================================\n";
+    cout << "  ESE 224 StockSim — Student Login\n";
+    cout << "========================================\n";
+    cout << "Enter your full name: ";
     getline(cin, studentName);
-
-    cout << "Enter student ID: ";
+    cout << "Enter your student ID: ";
     getline(cin, studentID);
+    cout << "\nWelcome, " << studentName << "!\n";
 
+    // --- Initialize shared objects ---
+    StockManager<ETF>   etfManager;
     StockManager<Stock> stockManager;
-    StockManager<ETF> etfManager;
-
-    Portfolio portfolio(studentName, 100000.0);
-    StockBST performanceBST;
+    StockBST            performanceBST;
+    Portfolio           portfolio(studentName, 10000.0);  // start with $10,000 cash
 
     bool dataLoaded = false;
     int choice = -1;
 
+    // ---------------------------------------------------------------
+    // Utility: print the main menu
+    // ---------------------------------------------------------------
     while (choice != 0) {
         cout << "\n===== StockSim: Historical Market Analyzer =====" << endl;
         cout << "Student: " << studentName << " | ID: " << studentID << endl;
