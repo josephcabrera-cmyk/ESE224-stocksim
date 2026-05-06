@@ -63,8 +63,8 @@ PriceHistory* CSVParser::loadHistory(const string& filename) {
         }
 
     string line;
-    const string STARTDATE = "1900-01-01";
-    const string ENDDATE = "2025-01-01";
+    const string STARTDATE = "2000-01-01";
+    const string ENDDATE = "2020-01-01";
     
     while (getline(file, line)) {
         if (line.empty()) {

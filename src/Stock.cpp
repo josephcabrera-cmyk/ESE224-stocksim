@@ -12,14 +12,17 @@ Stock::~Stock() {
 }
 
 bool Stock::loadFromCSV(const string& filename) {
+    delete history;
+    history = nullptr;
+
     history = CSVParser::loadHistory(filename);
+
     if (history == nullptr) {
         return false;
     }
-    else {
-        cout << history->getSize() << " trading days loaded." << endl;
-        return true;
-    }
+
+    cout << history->getSize() << " trading days loaded." << endl;
+    return true;
 }
 
 PriceHistory* Stock::getHistory() const {

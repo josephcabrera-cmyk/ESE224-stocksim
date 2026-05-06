@@ -1,4 +1,4 @@
-#include "../include/PriceHistory.h"
+#include "PriceHistory.h"
 #include <iostream>
 using namespace std;
 

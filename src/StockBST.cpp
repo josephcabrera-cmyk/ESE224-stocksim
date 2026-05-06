@@ -169,4 +169,5 @@ void StockBST::clearHelper(BSTNode* node) {
 
 void StockBST::clear() {
     clearHelper(root);
+    root = nullptr;
 }
