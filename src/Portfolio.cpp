@@ -16,7 +16,7 @@ void Portfolio::buyShares(const string& ticker, int shares, double price, const 
     cashBalance -= totalCost;
 
     bool found = false;
-    for (int i = 0; i < holdings.size(); i++) {
+    for (size_t i = 0; i < holdings.size(); i++) {
         if (holdings[i].ticker == ticker) {
             int newShares = holdings[i].shares + shares;
             double newAvgCost = (holdings[i].shares * holdings[i].avgCostBasis + shares * price) / newShares;
@@ -44,7 +44,7 @@ void Portfolio::sellShares(const string& ticker, int shares, double price, const
     double totalCost = shares * price;
 
     bool found = false;
-    for (int i = 0; i < holdings.size(); i++) {
+    for (size_t i = 0; i < holdings.size(); i++) {
         if (holdings[i].ticker == ticker) {
             if (holdings[i].shares < shares) {
                 return;
@@ -82,7 +82,7 @@ void Portfolio::undoLastTrade() {
 
     if (record.action == "BUY") {
         cashBalance += record.totalCost;
-        for (int i = 0; i < holdings.size(); i++) {
+        for (size_t i = 0; i < holdings.size(); i++) {
             if (holdings[i].ticker == record.ticker) {
                 holdings[i].shares -= record.shares;
                 if (holdings[i].shares == 0) {
@@ -96,7 +96,7 @@ void Portfolio::undoLastTrade() {
     if (record.action == "SELL") {
         cashBalance -= record.totalCost;
         bool found = false;
-        for (int i = 0; i < holdings.size(); i++) {
+        for (size_t i = 0; i < holdings.size(); i++) {
             if (holdings[i].ticker == record.ticker) {
                 holdings[i].shares += record.shares;
                 found = true;
@@ -113,7 +113,6 @@ void Portfolio::undoLastTrade() {
 // Add a pending order to the OrderQueue.
 void Portfolio::queueOrder(const Order& order)  {
     pendingOrders.enqueue(order);
-
 }
 
 // Dequeue the front Order and execute it if conditions are met:
@@ -150,7 +149,6 @@ void Portfolio::executeNextOrder(double currentPrice, const string& date) {
     } else if (order.side == "SELL") {
         sellShares(order.ticker, order.shares, currentPrice, date);
     }
-
 }
 
 // --- Portfolio queries ---
@@ -159,28 +157,25 @@ void Portfolio::executeNextOrder(double currentPrice, const string& date) {
 double Portfolio::getTotalMarketValue() const {
     double totalMarketValue = 0.0;
 
-    for (int i = 0; i < holdings.size(); i++) {
+    for (size_t i = 0; i < holdings.size(); i++) {
         totalMarketValue += holdings[i].shares * holdings[i].currentPrice;
     }
 
     return totalMarketValue;
-
 }
 
 // Returns total portfolio value: getTotalMarketValue() + cashBalance.
 double Portfolio::getTotalValue() const {
     return getTotalMarketValue() + cashBalance;
-
 }
 
 // Returns total unrealized return across all positions as a percentage:
 //   (totalMarketValue - totalCostBasis) / totalCostBasis * 100
 double Portfolio::getTotalUnrealizedReturn() const {
-
     double totalMarketValue = 0.0;
     double totalCostBasis = 0.0;
 
-    for (int i = 0; i < holdings.size(); i++) {
+    for (size_t i = 0; i < holdings.size(); i++) {
         totalMarketValue += holdings[i].shares * holdings[i].currentPrice;
         totalCostBasis += holdings[i].shares * holdings[i].avgCostBasis;
     }
@@ -195,12 +190,11 @@ double Portfolio::getTotalUnrealizedReturn() const {
 
 double Portfolio::getCashBalance() const {
     return cashBalance;
-
 }
 
 // Updates the currentPrice field of a position (called during backtesting).
 void Portfolio::updatePrice(const string& ticker, double newPrice) {
-    for (int i = 0; i < holdings.size(); i++) {
+    for (size_t i = 0; i < holdings.size(); i++) {
         if (holdings[i].ticker == ticker) {
             holdings[i].currentPrice = newPrice;
             return;
@@ -245,7 +239,7 @@ void Portfolio::printHoldings() const {
         return;
     }
 
-    for (int i = 0; i < holdings.size(); i++) {
+    for (size_t i = 0; i < holdings.size(); i++) {
         cout << "  Ticker: " << holdings[i].ticker
              << " | Shares: " << holdings[i].shares
              << " | Avg Cost: " << holdings[i].avgCostBasis
@@ -257,10 +251,8 @@ void Portfolio::printHoldings() const {
 
 void Portfolio::printTradeHistory() const {
     tradeHistory.printAll();
-
 }   // delegates to tradeHistory.printAll()
 
 void Portfolio::printPendingOrders() const {
     pendingOrders.printAll();
-
 }  // delegates to pendingOrders.printAll()

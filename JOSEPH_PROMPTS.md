@@ -98,6 +98,54 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 
 **Prompt:** Please help me debug undoLastTrade()
 
+**Prompt:** Am I missing any edge cases on executeNextOrder()?
+
+**Prompt:** How do we calculate sum in getTotalMarketValue()
+
+**Prompt:** What is updatePrice asking? What is backtesting?
+
+**Prompt:** How do we return descending for sortHoldingsByUnrealizedReturn()
+
+### Section: DynamicSIPStrategy.cpp
+
+**Prompt:** What is wrong with my constructor for DynamicSIPStrategy
+
+**Prompt:** Does DynamicSIPStrategy have the same structure as FixedSIPStrategy?
+
+**Prompt:** how do we compare against the 12-month rolling high/low to make this dynamic and not fixed
+
+**Prompt:** How do we find the maximum price over a 12 month period?
+
+**Prompt:** How do I make sure the strategy does not go over-budget?
+
+**Prompt:** Help me debug DynamicSIPStrategy it is acting like FixedSIPStrategy for some reason
+
+### Section: GoldenCrossStrategy.cpp
+
+**Prompt:** How do we use CircularQueue for the moving averages 50 and 200?
+
+**Prompt:** How do we "Enqueue today's close into both ma50Queue and ma200Queue"? What does that mean?
+
+**Prompt:** What are the precise conditions that mean "cross"? i.e. greater than or equal, or just greater than?
+
+**Prompt:** How do I prevent the golden/death cross from being triggered at the inital values?
+
+**Prompt:** Do I properly address all edge cases in GoldenCrossStrategy?
+
+### Section: MomentumStrategy.cpp
+
+**Prompt:** Please give me the basic shell for MomentumStrategy.cpp based on the header including constructor, backtest, getName, etc.
+
+**Prompt:** What does the header mean when it says "ReverseIterator integration is the key requirement here"?
+
+**Prompt:** how do we scan backwards ~126 trading days on PriceHistory, a doubly linked list?
+
+**Prompt:** Is the shape of the code similar to Golden, just with different conditions?
+
+### Section: main.cpp
+
+**Prompt:** How do we build an order struct for menuQueueOrder?
+
 **Prompt:**
 
 
