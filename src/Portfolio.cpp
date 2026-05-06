@@ -40,27 +40,32 @@ void Portfolio::buyShares(const string& ticker, int shares, double price, const 
 // Sell 'shares' of 'ticker' at 'price' on 'date'.
 // Adds to cashBalance. Reduces position (remove if shares reach 0).
 // Pushes a TradeRecord onto tradeHistory. Does nothing if position not found.
-void Portfolio::sellShares(const string& ticker, int shares, double price, const string& date) {
+bool Portfolio::sellShares(const string& ticker, int shares, double price, const string& date) {
     double totalCost = shares * price;
 
     bool found = false;
+
     for (size_t i = 0; i < holdings.size(); i++) {
         if (holdings[i].ticker == ticker) {
+            found = true;
+
             if (holdings[i].shares < shares) {
-                return;
+                return false;
             }
+
             int newShares = holdings[i].shares - shares;
             holdings[i].shares = newShares;
-            found = true;
+
             if (holdings[i].shares == 0) {
                 holdings.erase(holdings.begin() + i);
             }
+
             break;
         }
     }
 
     if (found == false) {
-        return; // Does nothing if position not found.
+        return false;
     }
 
     cashBalance += totalCost;
@@ -68,6 +73,8 @@ void Portfolio::sellShares(const string& ticker, int shares, double price, const
     TradeRecord record {ticker, date, price, shares, "SELL", totalCost};
 
     tradeHistory.push(record);
+
+    return true;
 }
 
 // Reverses the most recent trade by popping the TradeStack and
@@ -144,11 +151,18 @@ void Portfolio::executeNextOrder(double currentPrice, const string& date) {
         return;
     }
 
-    if (order.side == "BUY") {
-        buyShares(order.ticker, order.shares, currentPrice, date);
-    } else if (order.side == "SELL") {
-        sellShares(order.ticker, order.shares, currentPrice, date);
-    }
+   if (order.side == "BUY") {
+    buyShares(order.ticker, order.shares, currentPrice, date);
+    cout << "Order successfully executed: BUY "
+         << order.shares << " shares of "
+         << order.ticker << " at " << currentPrice << endl;
+} 
+else if (order.side == "SELL") {
+    sellShares(order.ticker, order.shares, currentPrice, date);
+    cout << "Order successfully executed: SELL "
+         << order.shares << " shares of "
+         << order.ticker << " at " << currentPrice << endl;
+}
 }
 
 // --- Portfolio queries ---
