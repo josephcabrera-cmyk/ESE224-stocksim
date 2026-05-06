@@ -98,6 +98,14 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 
 **Prompt:** Please help me debug undoLastTrade()
 
+**Prompt:** Am I missing any edge cases on executeNextOrder()?
+
+**Prompt:** How do we calculate sum in getTotalMarketValue()
+
+**Prompt:** What is updatePrice asking? What is backtesting?
+
+**Prompt:** How do we return descending for sortHoldingsByUnrealizedReturn()
+
 **Prompt:**
 
 
