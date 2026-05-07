@@ -14,7 +14,7 @@ double monthlyCapital, int startYear, int endYear) {
     double shares = 0.0;
     vector<double> portfolioValues;
 
-    for (int year = startYear; year <= endYear; year++) {
+    for (int year = startYear; year < endYear; year++) {
         for (int month = 1; month <= 12; month++) {
 
             PriceNode* current = history->getHead();
@@ -47,8 +47,10 @@ double monthlyCapital, int startYear, int endYear) {
 
     if (!portfolioValues.empty()) {
         result.maxDrawdown = calculateMaxDrawdown(portfolioValues);
-        result.totalReturn = (result.finalValue - result.totalInvested) / result.totalInvested * 100.0;
-        result.cagr = calculateCAGR(totalInvested, result.finalValue, endYear - startYear + 1);
+        if (result.totalInvested > 0.0) {
+            result.totalReturn = (result.finalValue - result.totalInvested) / result.totalInvested * 100.0;
+            result.cagr = calculateCAGR(totalInvested, result.finalValue, endYear - startYear);
+        }
     }
 
     return result;

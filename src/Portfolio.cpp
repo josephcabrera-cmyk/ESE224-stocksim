@@ -11,6 +11,10 @@ Portfolio::Portfolio(const string& ownerName, double initialCash)
 // Deducts from cashBalance. Updates or creates a Position.
 // Pushes a TradeRecord onto tradeHistory.
 void Portfolio::buyShares(const string& ticker, int shares, double price, const string& date) {
+    if (shares <= 0 || price <= 0.0) {
+        return;
+    }
+
     double totalCost = shares * price;
     
     cashBalance -= totalCost;
@@ -41,6 +45,10 @@ void Portfolio::buyShares(const string& ticker, int shares, double price, const 
 // Adds to cashBalance. Reduces position (remove if shares reach 0).
 // Pushes a TradeRecord onto tradeHistory. Does nothing if position not found.
 bool Portfolio::sellShares(const string& ticker, int shares, double price, const string& date) {
+    if (shares <= 0 || price <= 0.0) {
+        return false;
+    }
+
     double totalCost = shares * price;
 
     bool found = false;
@@ -117,6 +125,10 @@ void Portfolio::undoLastTrade() {
     }
 }
 
+bool Portfolio::hasTradeHistory() const {
+    return !tradeHistory.isEmpty();
+}
+
 // Add a pending order to the OrderQueue.
 void Portfolio::queueOrder(const Order& order)  {
     pendingOrders.enqueue(order);
@@ -151,18 +163,26 @@ void Portfolio::executeNextOrder(double currentPrice, const string& date) {
         return;
     }
 
-   if (order.side == "BUY") {
-    buyShares(order.ticker, order.shares, currentPrice, date);
-    cout << "Order successfully executed: BUY "
-         << order.shares << " shares of "
-         << order.ticker << " at " << currentPrice << endl;
-} 
-else if (order.side == "SELL") {
-    sellShares(order.ticker, order.shares, currentPrice, date);
-    cout << "Order successfully executed: SELL "
-         << order.shares << " shares of "
-         << order.ticker << " at " << currentPrice << endl;
+    if (order.side == "BUY") {
+        buyShares(order.ticker, order.shares, currentPrice, date);
+        cout << "Order successfully executed: BUY "
+             << order.shares << " shares of "
+             << order.ticker << " at " << currentPrice << endl;
+    }
+    else if (order.side == "SELL") {
+        bool success = sellShares(order.ticker, order.shares, currentPrice, date);
+        if (success) {
+            cout << "Order successfully executed: SELL "
+                 << order.shares << " shares of "
+                 << order.ticker << " at " << currentPrice << endl;
+        } else {
+            cout << "Order could not be executed: insufficient shares." << endl;
+        }
+    }
 }
+
+void Portfolio::executeNextOrder(double currentPrice) {
+    executeNextOrder(currentPrice, "");
 }
 
 // --- Portfolio queries ---
@@ -202,6 +222,10 @@ double Portfolio::getTotalUnrealizedReturn() const {
 
 }
 
+double Portfolio::getTotalReturn() const {
+    return getTotalUnrealizedReturn();
+}
+
 double Portfolio::getCashBalance() const {
     return cashBalance;
 }
@@ -235,6 +259,10 @@ void Portfolio::sortHoldingsByUnrealizedReturn() {
 
 }  // descending: best performer first
 
+void Portfolio::sortHoldingsByReturn() {
+    sortHoldingsByUnrealizedReturn();
+}
+
 void Portfolio::sortHoldingsByTicker() {
     sort(holdings.begin(), holdings.end(), [](const Position& left, const Position& right) {
         return left.ticker < right.ticker;
@@ -246,6 +274,7 @@ void Portfolio::sortHoldingsByTicker() {
 void Portfolio::printHoldings() const {
     cout << "Portfolio for " << ownerName << endl;
     cout << "Cash Balance: " << cashBalance << endl;
+    cout << "Total Unrealized Return: " << getTotalUnrealizedReturn() << "%" << endl;
     cout << "Holdings:" << endl;
 
     if (holdings.empty()) {
@@ -258,6 +287,12 @@ void Portfolio::printHoldings() const {
              << " | Shares: " << holdings[i].shares
              << " | Avg Cost: " << holdings[i].avgCostBasis
              << " | Current Price: " << holdings[i].currentPrice
+             << " | Return: "
+             << ((holdings[i].avgCostBasis == 0.0)
+                    ? 0.0
+                    : (holdings[i].currentPrice - holdings[i].avgCostBasis)
+                        / holdings[i].avgCostBasis * 100.0)
+             << "%"
              << endl;
     }
 

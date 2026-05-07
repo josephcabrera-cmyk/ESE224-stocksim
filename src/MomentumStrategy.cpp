@@ -12,17 +12,20 @@ double monthlyCapital, int startYear, int endYear) {
 		return result;
 	}
 	double shares = 0.0;
-	double cash = monthlyCapital;
-	double totalInvested = monthlyCapital;
+	double cash = 0.0;
+	double totalInvested = 0.0;
 	vector<double> portfolioValues;
 
-	for (int year = startYear; year <= endYear; year++) {
+	for (int year = startYear; year < endYear; year++) {
 	for (int month = 1; month <= 12; month++) {
 		PriceNode* current = history->getHead();
 		while (current != nullptr) {
 			int nodeYear = stoi(current->date.substr(0, 4));
 			int nodeMonth = stoi(current->date.substr(5, 2));
 			if (nodeYear == year && nodeMonth == month) {
+				cash += monthlyCapital;
+				totalInvested += monthlyCapital;
+
 				PriceHistory::ReverseIterator rit(current);
 				int stepped = 0;
 				while (stepped < lookbackDays && rit != history->rend()) {
@@ -56,8 +59,10 @@ double monthlyCapital, int startYear, int endYear) {
 	if (!portfolioValues.empty()) {
 		result.finalValue = portfolioValues.back();
 		result.maxDrawdown = calculateMaxDrawdown(portfolioValues);
-		result.totalReturn = (result.finalValue - result.totalInvested) / result.totalInvested * 100.0;
-		result.cagr = calculateCAGR(portfolioValues.front(), portfolioValues.back(), endYear - startYear + 1);
+		if (result.totalInvested > 0.0) {
+			result.totalReturn = (result.finalValue - result.totalInvested) / result.totalInvested * 100.0;
+			result.cagr = calculateCAGR(result.totalInvested, result.finalValue, endYear - startYear);
+		}
 	}
 	return result;
 }
