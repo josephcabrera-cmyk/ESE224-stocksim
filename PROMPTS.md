@@ -1,7 +1,7 @@
 # COMBINED AI Prompts Log — ESE 224 Final Project
 
 **Student Names:** Joseph Cabrera & Danny Ouyang
-**Student IDs:**   114650793 & ________
+**Student IDs:**   114650793 & ___________
 
 ---
 

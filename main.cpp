@@ -3,16 +3,7 @@
  * Historical Market Analyzer & Trading Strategy Simulator
  *
  * Student Names : Joseph Cabrera & Danny Ouyang
- * Student IDs   : 
- *
- * Instructions:
- *   1. Implement all classes listed in the header files under include/.
- *   2. Create corresponding .cpp files in src/ for each header.
- *   3. Place your Yahoo Finance CSV files in data/ (SPY.csv, AAPL.csv, TSLA.csv).
- *   4. Complete the menu handlers below — each case should call the relevant
- *      class methods you implemented.
- *   5. Do NOT use std::queue, std::stack, std::list, std::map, std::unordered_map,
- *      or any external library. std::vector, std::string, std::sort are allowed.
+ * Student IDs   : 114650793 & 
  *
  * Compile with C++11 or later:
  *   g++ -std=c++11 -Iinclude src/*.cpp main.cpp -o stocksim
