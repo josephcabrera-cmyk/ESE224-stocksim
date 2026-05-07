@@ -1,7 +1,7 @@
 # COMBINED AI Prompts Log — ESE 224 Final Project
 
 **Student Names:** Joseph Cabrera & Danny Ouyang
-**Student IDs:**   114650793 & ___________
+**Student IDs:**   114650793 & 115723777
 
 ---
 
@@ -140,6 +140,8 @@
 **Prompt:** Can you please vigorously test the program by testing many different inputs in main.cpp? If you find an issue, please report it and I will classify the issue as needing addressing or not needing addressing.
 
 **Prompt:** Please implement the necessary changes to prevent looping forever and other errors in main
+
+**Prompt:** We are having an issue with case 13 where our output shows a crazy high CAGR when we have a very high final portfolio value. Please help me identify the root cause and solution.
 
 ### Section: CSVParser.cpp
 
