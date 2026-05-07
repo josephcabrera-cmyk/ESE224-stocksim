@@ -1,7 +1,36 @@
 #include "ETF.h"
 #include "CSVParser.h"
 #include <iostream>
-#include <cmath>
+
+static double integerPower(double base, int exponent) {
+    double result = 1.0;
+
+    for (int i = 0; i < exponent; i++) {
+        result *= base;
+    }
+
+    return result;
+}
+
+static double nthRoot(double value, int n) {
+    if (value <= 0.0 || n <= 0) {
+        return 0.0;
+    }
+
+    double guess = (value >= 1.0) ? value : 1.0;
+
+    for (int i = 0; i < 40; i++) {
+        double denominator = integerPower(guess, n - 1);
+
+        if (denominator == 0.0) {
+            return 0.0;
+        }
+
+        guess = ((n - 1) * guess + value / denominator) / n;
+    }
+
+    return guess;
+}
 
 // Constructor
 ETF::ETF(const string& ticker, const string& name, const string& sector, double expenseRatio) 
@@ -45,7 +74,7 @@ double ETF::calculate10YearCAGR() const {
         return 0.0;
     }
 
-    return (pow(endValue / startValue, 1.0 / 10.0) - 1.0) * 100;
+    return (nthRoot(endValue / startValue, 10) - 1.0) * 100;
 
 }
 

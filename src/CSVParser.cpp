@@ -1,20 +1,21 @@
 #include "CSVParser.h"
 #include <fstream> //read and write
 #include <sstream> //split
-#include <vector>
 #include <iostream>
 using namespace std;
 
 //helper for breaking up by comma
-static vector<string> splitCSVLine(const string& line) {
-    vector <string> tokens;
+static int splitCSVLine(const string& line, string tokens[], int maxTokens) {
     string token;
+    int count = 0;
     stringstream ss(line); //read from string
 
-    while(getline(ss, token, ',')) {
-        tokens.push_back(token); //stops at each comma and stores piece into vector token
+    while(count < maxTokens && getline(ss, token, ',')) {
+        tokens[count] = token; //stops at each comma and stores piece
+        count++;
     }
-    return tokens;
+
+    return count;
 }
 
 PriceHistory* CSVParser::loadHistory(const string& filename) {
@@ -29,7 +30,10 @@ PriceHistory* CSVParser::loadHistory(const string& filename) {
     if(!getline(file, headerLine)) {
         return history; //empty file after opening
     }
-    vector<string> header = splitCSVLine(headerLine);
+
+    const int MAX_COLUMNS = 64;
+    string header[MAX_COLUMNS];
+    int headerCount = splitCSVLine(headerLine, header, MAX_COLUMNS);
 
     int dateIndex = -1;
     int openIndex = -1;
@@ -39,7 +43,7 @@ PriceHistory* CSVParser::loadHistory(const string& filename) {
     int volumeIndex = -1;
 
     //dynamic mapping
-    for(int i = 0; i < (int)header.size(); i++){
+    for(int i = 0; i < headerCount; i++){
           if (header[i] == "Date") {
             dateIndex = i;
         } else if (header[i] == "Open") {
@@ -71,7 +75,8 @@ PriceHistory* CSVParser::loadHistory(const string& filename) {
             continue;
         }
 
-        vector<string> row = splitCSVLine(line);
+        string row[MAX_COLUMNS];
+        int rowCount = splitCSVLine(line, row, MAX_COLUMNS);
 
         int maxIndex = dateIndex;
         if (openIndex > maxIndex) maxIndex = openIndex;
@@ -80,7 +85,7 @@ PriceHistory* CSVParser::loadHistory(const string& filename) {
         if (closeIndex > maxIndex) maxIndex = closeIndex;
         if (volumeIndex > maxIndex) maxIndex = volumeIndex;
 
-        if ((int)row.size() <= maxIndex) {
+        if (rowCount <= maxIndex) {
             continue; // malformed row
         }
 

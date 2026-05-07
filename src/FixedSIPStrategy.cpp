@@ -1,5 +1,19 @@
 #include "FixedSIPStrategy.h"
 
+static void updateMaxDrawdown(double currentValue, double& peakValue, double& maxDrawdown) {
+    if (currentValue > peakValue) {
+        peakValue = currentValue;
+    }
+
+    if (peakValue > 0.0) {
+        double drawdown = (peakValue - currentValue) / peakValue * 100.0;
+
+        if (drawdown > maxDrawdown) {
+            maxDrawdown = drawdown;
+        }
+    }
+}
+
 SimResult FixedSIPStrategy::backtest(PriceHistory* history,
 double monthlyCapital, int startYear, int endYear) {
     
@@ -12,7 +26,9 @@ double monthlyCapital, int startYear, int endYear) {
 
     double totalInvested = 0.0;
     double shares = 0.0;
-    vector<double> portfolioValues;
+    double peakValue = 0.0;
+    double maxDrawdown = 0.0;
+    bool hasPortfolioValue = false;
 
     for (int year = startYear; year < endYear; year++) {
         for (int month = 1; month <= 12; month++) {
@@ -35,7 +51,8 @@ double monthlyCapital, int startYear, int endYear) {
                     result.totalInvested = totalInvested;
                     result.finalValue = portfolioValue;
                     result.totalTrades++;
-                    portfolioValues.push_back(portfolioValue);
+                    updateMaxDrawdown(portfolioValue, peakValue, maxDrawdown);
+                    hasPortfolioValue = true;
 
                     break;
                 }
@@ -45,8 +62,8 @@ double monthlyCapital, int startYear, int endYear) {
         }
     }
 
-    if (!portfolioValues.empty()) {
-        result.maxDrawdown = calculateMaxDrawdown(portfolioValues);
+    if (hasPortfolioValue) {
+        result.maxDrawdown = maxDrawdown;
         if (result.totalInvested > 0.0) {
             result.totalReturn = (result.finalValue - result.totalInvested) / result.totalInvested * 100.0;
             result.cagr = calculateCAGR(totalInvested, result.finalValue, endYear - startYear);

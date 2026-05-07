@@ -43,7 +43,7 @@ public:
     // Remove and delete the asset with the given ticker.
     // Does nothing if ticker is not found.
     void removeAsset(const string& ticker) {
-        for (int i = 0; i < assets.size(); i++) {
+        for (size_t i = 0; i < assets.size(); i++) {
             if (assets[i]->getTicker() == ticker) {
                 delete assets[i];
                 assets.erase(assets.begin() + i);
@@ -54,7 +54,7 @@ public:
 
     // Linear search by ticker. Returns nullptr if not found.
     T* findByTicker(const string& ticker) const {
-        for (int i = 0; i < assets.size(); i++) {
+        for (size_t i = 0; i < assets.size(); i++) {
             if (assets[i]->getTicker() == ticker) {
                 return assets[i];
             }
@@ -65,21 +65,21 @@ public:
     // Sort assets in-place by calculateAnnualReturn(year), descending.
     // Uses std::sort with a lambda comparator.
     void sortByAnnualReturn(int year) {
-        std::sort(assets.begin(), assets.end(), [year](T* a, T* b) { 
+        std::sort(assets.begin(), assets.end(), [year](T* a, T* b) {
             return a->calculateAnnualReturn(year) > b->calculateAnnualReturn(year);
         });
     }
 
     // Sort assets alphabetically by ticker, ascending.
     void sortByTicker() {
-        std::sort(assets.begin(), assets.end(), [](T* a, T* b) { 
+        std::sort(assets.begin(), assets.end(), [](T* a, T* b) {
             return a->getTicker() < b->getTicker();
         });
     }
 
     // Call printSummary() on each asset in the collection.
     void printAll() const {
-        for (int i = 0; i < assets.size(); i++) {
+        for (size_t i = 0; i < assets.size(); i++) {
             assets[i]->printSummary();
         }
     }

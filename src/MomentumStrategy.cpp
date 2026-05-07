@@ -1,6 +1,20 @@
 #include "MomentumStrategy.h"
 using namespace std;
 
+static void updateMaxDrawdown(double currentValue, double& peakValue, double& maxDrawdown) {
+	if (currentValue > peakValue) {
+		peakValue = currentValue;
+	}
+
+	if (peakValue > 0.0) {
+		double drawdown = (peakValue - currentValue) / peakValue * 100.0;
+
+		if (drawdown > maxDrawdown) {
+			maxDrawdown = drawdown;
+		}
+	}
+}
+
 MomentumStrategy::MomentumStrategy(double momentumThreshold, int lookbackDays)
 	: momentumThreshold(momentumThreshold), lookbackDays(lookbackDays) {}
 
@@ -14,7 +28,9 @@ double monthlyCapital, int startYear, int endYear) {
 	double shares = 0.0;
 	double cash = 0.0;
 	double totalInvested = 0.0;
-	vector<double> portfolioValues;
+	double peakValue = 0.0;
+	double maxDrawdown = 0.0;
+	bool hasPortfolioValue = false;
 
 	for (int year = startYear; year < endYear; year++) {
 	for (int month = 1; month <= 12; month++) {
@@ -47,7 +63,10 @@ double monthlyCapital, int startYear, int endYear) {
 						result.totalTrades++;
 					}
 				}
-				portfolioValues.push_back(shares * current->close + cash);
+				double portfolioValue = shares * current->close + cash;
+				result.finalValue = portfolioValue;
+				updateMaxDrawdown(portfolioValue, peakValue, maxDrawdown);
+				hasPortfolioValue = true;
 				break;
 			}
 			current = current->next;
@@ -56,9 +75,8 @@ double monthlyCapital, int startYear, int endYear) {
 }
 
 	result.totalInvested = totalInvested;
-	if (!portfolioValues.empty()) {
-		result.finalValue = portfolioValues.back();
-		result.maxDrawdown = calculateMaxDrawdown(portfolioValues);
+	if (hasPortfolioValue) {
+		result.maxDrawdown = maxDrawdown;
 		if (result.totalInvested > 0.0) {
 			result.totalReturn = (result.finalValue - result.totalInvested) / result.totalInvested * 100.0;
 			result.cagr = calculateCAGR(result.totalInvested, result.finalValue, endYear - startYear);

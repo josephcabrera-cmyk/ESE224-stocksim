@@ -2,6 +2,20 @@
 #include <sstream>
 using namespace std;
 
+static void updateMaxDrawdown(double currentValue, double& peakValue, double& maxDrawdown) {
+	if (currentValue > peakValue) {
+		peakValue = currentValue;
+	}
+
+	if (peakValue > 0.0) {
+		double drawdown = (peakValue - currentValue) / peakValue * 100.0;
+
+		if (drawdown > maxDrawdown) {
+			maxDrawdown = drawdown;
+		}
+	}
+}
+
 DynamicSIPStrategy::DynamicSIPStrategy(double dipThreshold, double rallyThreshold, double multiplier)
 	: dipThreshold(dipThreshold), rallyThreshold(rallyThreshold), multiplier(multiplier) {}
 
@@ -22,8 +36,14 @@ double monthlyCapital, int startYear, int endYear) {
 	double totalInvested = 0.0;
 	double shares = 0.0;
 
-	vector<double> portfolioValues;
-	vector<double> recentPrices;
+	double peakValue = 0.0;
+	double maxDrawdown = 0.0;
+	bool hasPortfolioValue = false;
+
+	const int RECENT_PRICE_LIMIT = 12;
+	double recentPrices[RECENT_PRICE_LIMIT];
+	int recentStart = 0;
+	int recentCount = 0;
 
 	int monthsCompleted = 0;
 
@@ -47,17 +67,19 @@ double monthlyCapital, int startYear, int endYear) {
 					double baseSpend = monthlyCapital;
 					double spend = baseSpend;
 
-					if (recentPrices.size() >= 12) {
-						double high = recentPrices[0];
-						double low = recentPrices[0];
+					if (recentCount >= RECENT_PRICE_LIMIT) {
+						double high = recentPrices[recentStart];
+						double low = recentPrices[recentStart];
 
-						for (size_t i = 1; i < recentPrices.size(); i++) {
-							if (recentPrices[i] > high) {
-								high = recentPrices[i];
+						for (int i = 1; i < recentCount; i++) {
+							int index = (recentStart + i) % RECENT_PRICE_LIMIT;
+
+							if (recentPrices[index] > high) {
+								high = recentPrices[index];
 							}
 
-							if (recentPrices[i] < low) {
-								low = recentPrices[i];
+							if (recentPrices[index] < low) {
+								low = recentPrices[index];
 							}
 						}
 
@@ -110,13 +132,18 @@ double monthlyCapital, int startYear, int endYear) {
 						result.totalInvested = totalInvested;
 						result.finalValue = portfolioValue;
 						result.totalTrades++;
-						portfolioValues.push_back(portfolioValue);
+						updateMaxDrawdown(portfolioValue, peakValue, maxDrawdown);
+						hasPortfolioValue = true;
 					}
 
-					recentPrices.push_back(closePrice);
-
-					if (recentPrices.size() > 12) {
-						recentPrices.erase(recentPrices.begin());
+					if (recentCount < RECENT_PRICE_LIMIT) {
+						int index = (recentStart + recentCount) % RECENT_PRICE_LIMIT;
+						recentPrices[index] = closePrice;
+						recentCount++;
+					}
+					else {
+						recentPrices[recentStart] = closePrice;
+						recentStart = (recentStart + 1) % RECENT_PRICE_LIMIT;
 					}
 
 					monthsCompleted++;
@@ -129,8 +156,8 @@ double monthlyCapital, int startYear, int endYear) {
 		}
 	}
 
-	if (!portfolioValues.empty() && result.totalInvested > 0) {
-		result.maxDrawdown = calculateMaxDrawdown(portfolioValues);
+	if (hasPortfolioValue && result.totalInvested > 0) {
+		result.maxDrawdown = maxDrawdown;
 		result.totalReturn = (result.finalValue - result.totalInvested) / result.totalInvested * 100.0;
 		result.cagr = calculateCAGR(totalInvested, result.finalValue, endYear - startYear);
 	}

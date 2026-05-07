@@ -1,7 +1,36 @@
 #include "TradingStrategy.h"
 #include <iostream>
-#include <cmath>
 using namespace std;
+
+static double integerPower(double base, int exponent) {
+    double result = 1.0;
+
+    for (int i = 0; i < exponent; i++) {
+        result *= base;
+    }
+
+    return result;
+}
+
+static double nthRoot(double value, int n) {
+    if (value <= 0.0 || n <= 0) {
+        return 0.0;
+    }
+
+    double guess = (value >= 1.0) ? value : 1.0;
+
+    for (int i = 0; i < 40; i++) {
+        double denominator = integerPower(guess, n - 1);
+
+        if (denominator == 0.0) {
+            return 0.0;
+        }
+
+        guess = ((n - 1) * guess + value / denominator) / n;
+    }
+
+    return guess;
+}
 
 void TradingStrategy::printResult(const SimResult& result) const {
     cout << "Strategy: " << result.strategyName << endl;
@@ -18,7 +47,7 @@ double TradingStrategy::calculateCAGR(double startVal, double endVal, int years)
         return 0.0;
     }
 
-    double cagr = pow(endVal / startVal, 1.0 / years) - 1.0;
+    double cagr = nthRoot(endVal / startVal, years) - 1.0;
 
     return cagr * 100.0;
 }
