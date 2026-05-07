@@ -143,6 +143,8 @@
 
 **Prompt:** We are having an issue with case 13 where our output shows a crazy high CAGR when we have a very high final portfolio value. Please help me identify the root cause and solution.
 
+**Prompt:** Please implement our bonus_strategy.txt in our main.cpp parameterSweep().
+
 ### Section: CSVParser.cpp
 
 **Prompt:** We accidentally used std vector here while not being allowed. How do we implement without std vector?

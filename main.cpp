@@ -3,7 +3,7 @@
  * Historical Market Analyzer & Trading Strategy Simulator
  *
  * Student Names : Joseph Cabrera & Danny Ouyang
- * Student IDs   : 114650793 & 
+ * Student IDs   : 114650793 & 115723777
  *
  * Compile with C++11 or later:
  *   g++ -std=c++11 -Iinclude src/*.cpp main.cpp -o stocksim
@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <limits>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -132,61 +133,86 @@ void printStrategyComparison(const SimResult& r1,
     void parameterSweep(ETF* spy,
         double monthlyCapital,
         int startYear,
-        int endYear,
-        StockBST& bst) {
+        int endYear) {
 
     cout << "\n===== Dynamic SIP Parameter Sweep =====" << endl;
 
-    for (double dipThreshold = 3.0;
-         dipThreshold <= 20.0;
-         dipThreshold += 1.0) {
+    StockBST sweepBST;
 
-        DynamicSIPStrategy strategy(
-            dipThreshold,
-            10.0,
-            2.0
-        );
+    const int DIP_COUNT = 5;
+    const int RALLY_COUNT = 2;
+    const int MULTIPLIER_COUNT = 2;
 
-        SimResult result =
-            strategy.backtest(
-                spy->getHistory(),
-                monthlyCapital,
-                startYear,
-                endYear
-            );
+    double dipOptions[DIP_COUNT] = {8.0, 12.0, 14.0, 14.2, 15.0};
+    double rallyOptions[RALLY_COUNT] = {5.5, 10.0};
+    double multiplierOptions[MULTIPLIER_COUNT] = {2.0, 3.0};
+    string bestLabel = "";
+    double bestValue = 0.0;
+    bool hasBest = false;
 
-        string label =
-            "dip=" +
-            to_string((int)dipThreshold) +
-            "%";
+    for (int dipIndex = 0; dipIndex < DIP_COUNT; dipIndex++) {
+        for (int rallyIndex = 0; rallyIndex < RALLY_COUNT; rallyIndex++) {
+            for (int multiplierIndex = 0;
+                 multiplierIndex < MULTIPLIER_COUNT;
+                 multiplierIndex++) {
 
-        bst.insert(
-            label,
-            result.finalValue,
-            0
-        );
+                double dipThreshold = dipOptions[dipIndex];
+                double rallyThreshold = rallyOptions[rallyIndex];
+                double multiplier = multiplierOptions[multiplierIndex];
 
-        cout << label
-             << " -> Final Value: $"
-             << result.finalValue
-             << endl;
+                DynamicSIPStrategy strategy(
+                    dipThreshold,
+                    rallyThreshold,
+                    multiplier
+                );
+
+                SimResult result =
+                    strategy.backtest(
+                        spy->getHistory(),
+                        monthlyCapital,
+                        startYear,
+                        endYear
+                    );
+
+                ostringstream labelStream;
+                labelStream << "dip=" << dipThreshold
+                            << "%,rally=" << rallyThreshold
+                            << "%,mult=" << multiplier << "x";
+
+                string label = labelStream.str();
+
+                sweepBST.insert(
+                    label,
+                    result.finalValue,
+                    0
+                );
+
+                if (!hasBest || result.finalValue > bestValue) {
+                    bestLabel = label;
+                    bestValue = result.finalValue;
+                    hasBest = true;
+                }
+
+                cout << label
+                     << " -> Final Value: $"
+                     << result.finalValue
+                     << endl;
+            }
+        }
     }
-
     cout << "\n===== Ranked Results =====" << endl;
 
-    bst.inorder();
+    sweepBST.inorder();
 
-    StockBST::BSTNode* best = bst.findMax();
-
-    if (best != nullptr) {
+    if (hasBest) {
         cout << "\n===== BEST THRESHOLD =====" << endl;
 
         cout << "Strategy: "
-             << best->ticker
+             << bestLabel
              << endl;
 
         cout << "Final Value: $"
-             << best->key
+             << bestValue
              << endl;
     }
 }
@@ -711,7 +737,7 @@ int main() {
             }
 
             FixedSIPStrategy fixed;
-            DynamicSIPStrategy dynamic(10.0, 20.0, 2.0);
+            DynamicSIPStrategy dynamic(14.2, 5.5, 3.0);
             GoldenCrossStrategy golden(50, 200);
             MomentumStrategy momentum(5.0, 126);
 
@@ -789,14 +815,11 @@ int main() {
                 continue;
             }
 
-            StockBST sweepBST;
-
             parameterSweep(
                 spy,
                 monthlyCapital,
                 startYear,
-                endYear,
-                sweepBST
+                endYear
             );
         }
 
