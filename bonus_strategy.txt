@@ -1,1 +1,19 @@
-Dynamic SIP Strategy Parameters (to be completed) 
+Strategy Name         : Dynamic SIP (dip=14.2%, rally=5.5%, mult=3x)
+monthlyCapital        = $500
+startYear             = 2000
+endYear               = 2020
+ticker                = SPX
+
+Algorithm Description :
+The strategy compares the current monthly close on the first trading day against the prior 12 monthly closes. If the price is down at least 14.2% from the "rolling high", it invests 3 times the normal monthly capital. If the price increases at least 5.5% from the "rolling low", it reduces the monthly spend by half. Leftover money is carried over, and the final month uses the remaining budget.
+
+Parameters Used       :
+dipThreshold           = 14.2%
+rallyThreshold         = 5.5%
+multiplier             = 3.0x
+
+Final Portfolio Value : $313,330.33
+Fixed SIP Baseline    : $266,866.65
+CAGR                  : 4.92 %
+Max Drawdown          : 41.02 %
+Total Trades          : 240

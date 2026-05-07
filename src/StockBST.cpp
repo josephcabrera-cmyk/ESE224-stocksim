@@ -1,6 +1,5 @@
 #include "StockBST.h"
 #include <iostream>
-#include <algorithm>
 
 // Constructor
 StockBST::StockBST() 
@@ -131,7 +130,7 @@ int StockBST::heightHelper(BSTNode* node) const {
 
     int rightHeight = heightHelper(node->right);
 
-    return 1 + max(leftHeight, rightHeight);
+    return 1 + ((leftHeight > rightHeight) ? leftHeight : rightHeight);
 }
 
 // Returns the number of edges on the longest root-to-leaf path. -1 if empty.
