@@ -48,7 +48,7 @@ double monthlyCapital, int startYear, int endYear) {
     if (!portfolioValues.empty()) {
         result.maxDrawdown = calculateMaxDrawdown(portfolioValues);
         result.totalReturn = (result.finalValue - result.totalInvested) / result.totalInvested * 100.0;
-        result.cagr = calculateCAGR(portfolioValues.front(), portfolioValues.back(), endYear - startYear + 1);
+        result.cagr = calculateCAGR(totalInvested, result.finalValue, endYear - startYear + 1);
     }
 
     return result;
