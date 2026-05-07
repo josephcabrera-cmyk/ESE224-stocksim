@@ -14,9 +14,10 @@ CMakeFiles/
 CMakeCache.txt
 cmake-build-*/
 
-# Output files (keep folder)
+# Output files (keep folder and required screenshots)
 output/*
 !output/.gitkeep
+!output/*.png
 
 # Logs / temp
 *.log
