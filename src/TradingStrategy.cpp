@@ -2,14 +2,18 @@
 #include <iostream>
 using namespace std;
 
-static double integerPower(double base, int exponent) {
+static bool powerAtLeast(double base, int exponent, double target) {
     double result = 1.0;
 
     for (int i = 0; i < exponent; i++) {
         result *= base;
+
+        if (base >= 1.0 && result >= target) {
+            return true;
+        }
     }
 
-    return result;
+    return result >= target;
 }
 
 static double nthRoot(double value, int n) {
@@ -17,19 +21,21 @@ static double nthRoot(double value, int n) {
         return 0.0;
     }
 
-    double guess = (value >= 1.0) ? value : 1.0;
+    double low = 0.0;
+    double high = (value >= 1.0) ? value : 1.0;
 
-    for (int i = 0; i < 40; i++) {
-        double denominator = integerPower(guess, n - 1);
+    for (int i = 0; i < 100; i++) {
+        double mid = (low + high) / 2.0;
 
-        if (denominator == 0.0) {
-            return 0.0;
+        if (powerAtLeast(mid, n, value)) {
+            high = mid;
         }
-
-        guess = ((n - 1) * guess + value / denominator) / n;
+        else {
+            low = mid;
+        }
     }
 
-    return guess;
+    return (low + high) / 2.0;
 }
 
 void TradingStrategy::printResult(const SimResult& result) const {
