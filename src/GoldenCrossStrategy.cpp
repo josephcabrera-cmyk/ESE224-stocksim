@@ -18,6 +18,20 @@ static int getMonthFromDate(const string& date) {
     return stoi(date.substr(5, 2));
 }
 
+static void updateMaxDrawdown(double currentValue, double& peakValue, double& maxDrawdown) {
+    if (currentValue > peakValue) {
+        peakValue = currentValue;
+    }
+
+    if (peakValue > 0.0) {
+        double drawdown = (peakValue - currentValue) / peakValue * 100.0;
+
+        if (drawdown > maxDrawdown) {
+            maxDrawdown = drawdown;
+        }
+    }
+}
+
 GoldenCrossStrategy::GoldenCrossStrategy(int shortWindow, int longWindow)
     : shortWindow(shortWindow), longWindow(longWindow) {
     
@@ -73,7 +87,9 @@ SimResult GoldenCrossStrategy::backtest(PriceHistory* history,
     int lastContributionYear = -1;
     int lastContributionMonth = -1;
 
-    vector<double> portfolioValues;
+    double peakValue = 0.0;
+    double maxDrawdown = 0.0;
+    bool hasPortfolioValue = false;
 
     for (PriceHistory::Iterator it = history->begin(); it != history->end(); ++it) {
         PriceNode& node = *it;
@@ -139,7 +155,8 @@ SimResult GoldenCrossStrategy::backtest(PriceHistory* history,
         }
 
         double portfolioValue = cash + shares * closePrice;
-        portfolioValues.push_back(portfolioValue);
+        updateMaxDrawdown(portfolioValue, peakValue, maxDrawdown);
+        hasPortfolioValue = true;
     }
 
     // Use last available price in range for final portfolio value
@@ -166,7 +183,9 @@ SimResult GoldenCrossStrategy::backtest(PriceHistory* history,
                                 result.finalValue,
                                 endYear - startYear);
 
-    result.maxDrawdown = calculateMaxDrawdown(portfolioValues);
+    if (hasPortfolioValue) {
+        result.maxDrawdown = maxDrawdown;
+    }
 
     return result;
 }

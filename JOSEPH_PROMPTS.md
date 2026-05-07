@@ -58,6 +58,8 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 
 **Prompt:** do we rewrite everything in Stock printSummary to ETF?
 
+**Prompt:** cmath is actually not on our allowed list of includes. Can we implement without it?
+
 ### Section: StockManager.h
 
 **Prompt:** in removeAsset, how do I delete the pointer and erase from vector?
@@ -120,6 +122,8 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 
 **Prompt:** Help me debug DynamicSIPStrategy it is acting like FixedSIPStrategy for some reason
 
+**Prompt:** Can we implement this without using vector<double>? Not sure if std vector is allowed here.
+
 ### Section: GoldenCrossStrategy.cpp
 
 **Prompt:** How do we use CircularQueue for the moving averages 50 and 200?
@@ -157,6 +161,19 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 **Prompt:** Can you please vigorously test the program by testing many different inputs in main.cpp? If you find an issue, please report it and I will classify the issue as needing addressing or not needing addressing.
 
 **Prompt:** Please implement the necessary changes to prevent looping forever and other errors in main
+
+### Section: CSVParser.cpp
+
+**Prompt:** We accidentally used std vector here while not being allowed. How do we implement without std vector?
+
+### Section: FixedSIPStrategy.cpp
+
+**Prompt:** Can we implement without using vector<double>? Not sure if std vector is allowed here based on the guidelines.
+
+### Section: FixedSIPStrategy.cpp
+
+**Prompt:** cmath is used here and I am not sure if that is allowed based on the lab guidelines. Can we implement without?
+
 
 \---
 

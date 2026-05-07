@@ -366,7 +366,7 @@ int main() {
                 cout << "No BST entries found in that range." << endl;
             }
 
-            for (size_t i = 0; i < (int)results.size(); i++) {
+            for (size_t i = 0; i < results.size(); i++) {
                 cout << results[i]->ticker
                      << " | Year: " << results[i]->year
                      << " | Return: " << results[i]->key << "%"
