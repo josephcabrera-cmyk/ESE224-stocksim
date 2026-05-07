@@ -119,11 +119,12 @@ void printStrategyComparison(const SimResult& r1,
     cout << "Trades: " << r4.totalTrades << endl;
 }
 
+    // Bonus
     void parameterSweep(ETF* spy,
-                    double monthlyCapital,
-                    int startYear,
-                    int endYear,
-                    StockBST& bst) {
+        double monthlyCapital,
+        int startYear,
+        int endYear,
+        StockBST& bst) {
 
     cout << "\n===== Dynamic SIP Parameter Sweep =====" << endl;
 
@@ -187,7 +188,7 @@ int main() {
     // --- Student login ---
     string studentName, studentID;
     cout << "========================================\n";
-    cout << "  ESE 224 StockSim — Student Login\n";
+    cout << "  ESE 224 StockSim - Student Login\n";
     cout << "========================================\n";
     cout << "Enter your full name: ";
     getline(cin, studentName);
@@ -230,7 +231,11 @@ int main() {
         cout << "Enter choice: ";
         cin >> choice;
 
-        if (choice == 1) {
+        // ---------------------------------------------------------------
+        // Menu handler stubs — implement each one below
+        // ---------------------------------------------------------------
+
+        if (choice == 1) {  // menuLoadData
             if (dataLoaded) {
                 cout << "Data already loaded." << endl;
                 continue;
@@ -255,7 +260,7 @@ int main() {
             }
         }
 
-        else if (choice == 2) {
+        else if (choice == 2) { // menuDisplayHistory
             if (!dataLoaded) {
                 cout << "Load data first." << endl;
                 continue;
@@ -267,6 +272,9 @@ int main() {
                 cout << "No history loaded." << endl;
                 continue;
             }
+
+            stock->printSummary();
+            cout << endl;
 
             PriceNode* current = stock->getHistory()->getHead();
 
@@ -283,7 +291,7 @@ int main() {
             }
         }
 
-        else if (choice == 3) {
+        else if (choice == 3) { // menuSearchByDate
             if (!dataLoaded) {
                 cout << "Load data first." << endl;
                 continue;
@@ -303,7 +311,7 @@ int main() {
             stock->getHistory()->printRange(startDate, endDate);
         }
 
-        else if (choice == 4) {
+        else if (choice == 4) { // menuBSTRangeSearch
             if (!dataLoaded) {
                 cout << "Load data first." << endl;
                 continue;
@@ -335,7 +343,7 @@ int main() {
             }
         }
 
-        else if (choice == 5) {
+        else if (choice == 5) { // menuInsertIntoBST
             if (!dataLoaded) {
                 cout << "Load data first." << endl;
                 continue;
@@ -361,7 +369,7 @@ int main() {
                  << endl;
         }
 
-        else if (choice == 6) {
+        else if (choice == 6) { // menuDisplayBST
             int traversalChoice;
 
             cout << "\nBST Traversal:" << endl;
@@ -382,7 +390,7 @@ int main() {
             }
         }
 
-        else if (choice == 7) {
+        else if (choice == 7) { // menuAddToPortfolio
             if (!dataLoaded) {
                 cout << "Load data first." << endl;
                 continue;
@@ -408,7 +416,7 @@ int main() {
                  << stock->getTicker() << " at " << price << endl;
         }
 
-        else if (choice == 8) {
+        else if (choice == 8) { // menuRemoveFromPortfolio
             if (!dataLoaded) {
                 cout << "Load data first." << endl;
                 continue;
@@ -435,7 +443,7 @@ int main() {
             }
         }
 
-        else if (choice == 9) {
+        else if (choice == 9) { // menuQueueOrder
             Order order;
 
             cout << "Enter ticker: ";
@@ -461,7 +469,7 @@ int main() {
             cout << "Order queued." << endl;
         }
 
-        else if (choice == 10) {
+        else if (choice == 10) {    // menuExecuteOrder
             if (!dataLoaded) {
                 cout << "Load data first." << endl;
                 continue;
@@ -475,12 +483,12 @@ int main() {
             portfolio.executeNextOrder(currentPrice, date);
         }
 
-        else if (choice == 11) {
+        else if (choice == 11) {    // menuUndoTrade
             portfolio.undoLastTrade();
             cout << "Last trade undone." << endl;
         }
 
-        else if (choice == 12) {
+        else if (choice == 12) {    // menuRunStrategy
             if (!dataLoaded) {
                 cout << "Load data first." << endl;
                 continue;
@@ -570,7 +578,7 @@ int main() {
             }
         }
 
-        else if (choice == 13) {
+        else if (choice == 13) {    // menuCompareStrategies
             if (!dataLoaded) {
                 cout << "Load data first." << endl;
                 continue;
@@ -604,13 +612,29 @@ int main() {
             printStrategyComparison(r1, r2, r3, r4);
         }
 
-        else if (choice == 14) {
+        else if (choice == 14) {    // menuPortfolioSummary
+            cout << "\n===== Portfolio Summary =====" << endl;
             portfolio.printHoldings();
+
+            cout << "\n===== Asset Summary =====" << endl;
+
+            stockManager.sortByAnnualReturn(2020);
+            etfManager.sortByAnnualReturn(2020);
+
+            cout << "\nStocks:" << endl;
+            stockManager.printAll();
+
+            cout << "\nETFs:" << endl;
+            etfManager.printAll();
         }
 
-        else if (choice == 15) {
+        else if (choice == 15) {    // menuTradeHistory
             portfolio.printTradeHistory();
         }
+
+        // ---------------------------------------------------------------
+        // BONUS: Parameter Sweep for DynamicSIPStrategy
+        // ---------------------------------------------------------------
 
          else if (choice == 16) {
 
