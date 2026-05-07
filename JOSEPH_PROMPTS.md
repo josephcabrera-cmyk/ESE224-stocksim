@@ -150,6 +150,13 @@ https://docs.google.com/forms/d/1NpkLKFrnvGgSsycC4Ba0IhCPSL\_MIHtGaU-X84D5CnY
 
 **Prompt:** What are some edge cases that we have to fix for our functions in main.cpp?
 
+**Prompt:** SPX seems to be loading pnly 1540 days of data, while the other two load 5031 days. What is the cause of this problem and how do we fix it?
+
+**Prompt:** The CAGR value we are getting from our strategies seems to be far too high. Is this an issue in our main our with our strategy logic?
+
+**Prompt:** Can you please vigorously test the program by testing many different inputs in main.cpp? If you find an issue, please report it and I will classify the issue as needing addressing or not needing addressing.
+
+**Prompt:** Please implement the necessary changes to prevent looping forever and other errors in main
 
 \---
 

@@ -1,4 +1,5 @@
 #include "DynamicSIPStrategy.h"
+#include <sstream>
 using namespace std;
 
 DynamicSIPStrategy::DynamicSIPStrategy(double dipThreshold, double rallyThreshold, double multiplier)
@@ -14,7 +15,7 @@ double monthlyCapital, int startYear, int endYear) {
 		return result;
 	}
 
-	int totalMonths = (endYear - startYear+1) * 12; 
+	int totalMonths = (endYear - startYear) * 12; 
 	double totalBudget = totalMonths * monthlyCapital;
 	double remainingBudget = totalBudget;
 
@@ -26,7 +27,7 @@ double monthlyCapital, int startYear, int endYear) {
 
 	int monthsCompleted = 0;
 
-	for (int year = startYear; year <= endYear; year++) {
+	for (int year = startYear; year < endYear; year++) {
 
 		for (int month = 1; month <= 12; month++) {
 
@@ -131,13 +132,17 @@ double monthlyCapital, int startYear, int endYear) {
 	if (!portfolioValues.empty() && result.totalInvested > 0) {
 		result.maxDrawdown = calculateMaxDrawdown(portfolioValues);
 		result.totalReturn = (result.finalValue - result.totalInvested) / result.totalInvested * 100.0;
-		result.cagr = calculateCAGR(totalInvested, result.finalValue, endYear - startYear + 1);
+		result.cagr = calculateCAGR(totalInvested, result.finalValue, endYear - startYear);
 	}
 
 	return result;
 }
 string DynamicSIPStrategy::getName() const { 
-	return "Dynamic SIP";
+	ostringstream out;
+	out << "Dynamic SIP (dip=" << dipThreshold
+	    << "%, rally=" << rallyThreshold
+	    << "%, mult=" << multiplier << "x)";
+	return out.str();
 }
 
 double DynamicSIPStrategy::getDipThreshold() const { 

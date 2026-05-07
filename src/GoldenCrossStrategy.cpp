@@ -1,4 +1,5 @@
 #include "GoldenCrossStrategy.h"
+#include <sstream>
 #include <string>
 using namespace std;
 
@@ -35,7 +36,9 @@ GoldenCrossStrategy::GoldenCrossStrategy(int shortWindow, int longWindow)
 }
 
 string GoldenCrossStrategy::getName() const {
-    return "Golden Cross (50/200 MA)";
+    ostringstream out;
+    out << "Golden Cross (" << shortWindow << "/" << longWindow << " MA)";
+    return out.str();
 }
 
 SimResult GoldenCrossStrategy::backtest(PriceHistory* history,
@@ -78,7 +81,7 @@ SimResult GoldenCrossStrategy::backtest(PriceHistory* history,
         int year = getYearFromDate(node.date);
         int month = getMonthFromDate(node.date);
 
-        if (year < startYear || year > endYear) {
+        if (year < startYear || year >= endYear) {
             continue;
         }
 
@@ -146,7 +149,7 @@ SimResult GoldenCrossStrategy::backtest(PriceHistory* history,
         PriceNode& node = *it;
         int year = getYearFromDate(node.date);
 
-        if (year >= startYear && year <= endYear) {
+        if (year >= startYear && year < endYear) {
             finalPrice = node.close;
             break;
         }
@@ -161,7 +164,7 @@ SimResult GoldenCrossStrategy::backtest(PriceHistory* history,
 
     result.cagr = calculateCAGR(result.totalInvested,
                                 result.finalValue,
-                                endYear - startYear + 1);
+                                endYear - startYear);
 
     result.maxDrawdown = calculateMaxDrawdown(portfolioValues);
 

@@ -95,7 +95,7 @@ PriceHistory* CSVParser::loadHistory(const string& filename) {
             double high = stod(row[highIndex]);
             double low = stod(row[lowIndex]);
             double close = stod(row[closeIndex]);
-            long volume = stol(row[volumeIndex]);
+            long long volume = stoll(row[volumeIndex]);
             //add to linked list
             history->append(date, open, high, low, close, volume);
         }

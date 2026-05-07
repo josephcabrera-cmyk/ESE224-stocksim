@@ -48,6 +48,8 @@ public:
     // Restores cashBalance to its pre-trade state.
     void undoLastTrade();
 
+    bool hasTradeHistory() const;
+
     // Add a pending order to the OrderQueue.
     void queueOrder(const Order& order);
 
@@ -57,6 +59,7 @@ public:
     //   LIMIT SELL   → execute if currentPrice >= order.targetPrice
     // Prints "Order skipped" if LIMIT conditions are not met (order is discarded).
     void executeNextOrder(double currentPrice, const string& date);
+    void executeNextOrder(double currentPrice);
 
     // --- Portfolio queries ---
 
@@ -70,6 +73,9 @@ public:
     //   (totalMarketValue - totalCostBasis) / totalCostBasis * 100
     double getTotalUnrealizedReturn() const;
 
+    // Assignment-required name for the same portfolio return metric.
+    double getTotalReturn() const;
+
     double getCashBalance() const;
 
     // Updates the currentPrice field of a position (called during backtesting).
@@ -77,6 +83,7 @@ public:
 
     // --- Sorting (uses std::sort with custom comparators) ---
     void sortHoldingsByUnrealizedReturn();  // descending: best performer first
+    void sortHoldingsByReturn();            // assignment-required wrapper
     void sortHoldingsByTicker();            // alphabetical ascending
 
     // --- Display ---

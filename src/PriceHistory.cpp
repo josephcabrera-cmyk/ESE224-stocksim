@@ -19,7 +19,7 @@ PriceHistory::~PriceHistory() {
 }
 
 //append(add new node to end of list)
-void PriceHistory::append(const string& date, double open, double high, double low, double close, long volume) {
+void PriceHistory::append(const string& date, double open, double high, double low, double close, long long volume) {
     
     PriceNode* newNode = new PriceNode(date, open, high, low, close, volume);
     if (head == nullptr) {

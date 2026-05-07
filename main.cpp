@@ -19,6 +19,7 @@
  */
 
 #include <iostream>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -43,10 +44,27 @@
 
 using namespace std;
 
+template <typename T>
+bool readNumber(T& value) {
+    T parsedValue;
+    if (cin >> parsedValue) {
+        value = parsedValue;
+        return true;
+    }
+    if (!cin.eof()) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+    return false;
+}
+
 Stock* chooseStock(StockManager<Stock>& sm, StockManager<ETF>& em) {
     int choice;
     cout << "\nChoose stock:\n[1] SPX\n[2] AMZN\n[3] NVDA\nEnter choice: ";
-    cin >> choice;
+    if (!readNumber(choice)) {
+        cout << "Invalid. Using SPX." << endl;
+        return em.findByTicker("SPX");
+    }
     if (choice == 1) return em.findByTicker("SPX");
     if (choice == 2) return sm.findByTicker("AMZN");
     if (choice == 3) return sm.findByTicker("NVDA");
@@ -229,7 +247,14 @@ int main() {
         cout << "[16] Run Dynamic SIP Parameter Sweep (BONUS)" << endl;
         cout << " [0] Exit" << endl;
         cout << "Enter choice: ";
-        cin >> choice;
+        if (!readNumber(choice)) {
+            if (cin.eof()) {
+                cout << "Input ended. Exiting StockSim." << endl;
+                break;
+            }
+            cout << "Invalid numeric input." << endl;
+            continue;
+        }
 
         // ---------------------------------------------------------------
         // Menu handler stubs — implement each one below
@@ -321,10 +346,16 @@ int main() {
             double high;
 
             cout << "Enter low return %: ";
-            cin >> low;
+            if (!readNumber(low)) {
+                cout << "Invalid numeric input." << endl;
+                continue;
+            }
 
             cout << "Enter high return %: ";
-            cin >> high;
+            if (!readNumber(high)) {
+                cout << "Invalid numeric input." << endl;
+                continue;
+            }
 
             vector<StockBST::BSTNode*> results;
             performanceBST.rangeSearch(low, high, results);
@@ -353,7 +384,10 @@ int main() {
 
             int year;
             cout << "Enter year to calculate return: ";
-            cin >> year;
+            if (!readNumber(year)) {
+                cout << "Invalid numeric input." << endl;
+                continue;
+            }
 
             double annualReturn = stock->calculateAnnualReturn(year);
 
@@ -377,7 +411,10 @@ int main() {
             cout << "[2] Preorder" << endl;
             cout << "[3] Postorder" << endl;
             cout << "Enter choice: ";
-            cin >> traversalChoice;
+            if (!readNumber(traversalChoice)) {
+                cout << "Invalid numeric input." << endl;
+                continue;
+            }
 
             if (traversalChoice == 1) {
                 performanceBST.inorder();
@@ -400,7 +437,15 @@ int main() {
 
             int shares;
             cout << "Enter shares to buy: ";
-            cin >> shares;
+            if (!readNumber(shares)) {
+                cout << "Invalid numeric input." << endl;
+                continue;
+            }
+
+            if (shares <= 0) {
+                cout << "Shares must be positive." << endl;
+                continue;
+            }
 
             double price = getLatestPrice(stock);
             string date = getLatestDate(stock);
@@ -426,7 +471,15 @@ int main() {
 
             int shares;
             cout << "Enter shares to sell/remove: ";
-            cin >> shares;
+            if (!readNumber(shares)) {
+                cout << "Invalid numeric input." << endl;
+                continue;
+            }
+
+            if (shares <= 0) {
+                cout << "Shares must be positive." << endl;
+                continue;
+            }
 
             double price = getLatestPrice(stock);
             string date = getLatestDate(stock);
@@ -456,10 +509,21 @@ int main() {
             cin >> order.side;
 
             cout << "Enter target price, use 0 for MARKET: ";
-            cin >> order.targetPrice;
+            if (!readNumber(order.targetPrice)) {
+                cout << "Invalid numeric input." << endl;
+                continue;
+            }
 
             cout << "Enter shares: ";
-            cin >> order.shares;
+            if (!readNumber(order.shares)) {
+                cout << "Invalid numeric input." << endl;
+                continue;
+            }
+
+            if (order.shares <= 0) {
+                cout << "Shares must be positive." << endl;
+                continue;
+            }
 
             cout << "Enter submitted date YYYY-MM-DD: ";
             cin >> order.submittedDate;
@@ -484,8 +548,12 @@ int main() {
         }
 
         else if (choice == 11) {    // menuUndoTrade
-            portfolio.undoLastTrade();
-            cout << "Last trade undone." << endl;
+            if (!portfolio.hasTradeHistory()) {
+                cout << "No trades to undo." << endl;
+            } else {
+                portfolio.undoLastTrade();
+                cout << "Last trade undone." << endl;
+            }
         }
 
         else if (choice == 12) {    // menuRunStrategy
@@ -502,13 +570,27 @@ int main() {
             int strategyChoice;
 
             cout << "Enter monthly capital: ";
-            cin >> monthlyCapital;
+            if (!readNumber(monthlyCapital)) {
+                cout << "Invalid numeric input." << endl;
+                continue;
+            }
+
+            if (monthlyCapital <= 0.0) {
+                cout << "Monthly capital must be positive." << endl;
+                continue;
+            }
 
             cout << "Enter start year: ";
-            cin >> startYear;
+            if (!readNumber(startYear)) {
+                cout << "Invalid numeric input." << endl;
+                continue;
+            }
 
             cout << "Enter end year: ";
-            cin >> endYear;
+            if (!readNumber(endYear)) {
+                cout << "Invalid numeric input." << endl;
+                continue;
+            }
 
             cout << "\nChoose strategy:" << endl;
             cout << "[1] Fixed SIP" << endl;
@@ -516,7 +598,10 @@ int main() {
             cout << "[3] Golden Cross" << endl;
             cout << "[4] Momentum" << endl;
             cout << "Enter choice: ";
-            cin >> strategyChoice;
+            if (!readNumber(strategyChoice)) {
+                cout << "Invalid numeric input." << endl;
+                continue;
+            }
 
             if (strategyChoice == 1) {
                 FixedSIPStrategy strategy;
@@ -530,13 +615,22 @@ int main() {
                 double multiplier;
 
                 cout << "Enter dip threshold percent: ";
-                cin >> dipThreshold;
+                if (!readNumber(dipThreshold)) {
+                    cout << "Invalid numeric input." << endl;
+                    continue;
+                }
 
                 cout << "Enter rally threshold percent: ";
-                cin >> rallyThreshold;
+                if (!readNumber(rallyThreshold)) {
+                    cout << "Invalid numeric input." << endl;
+                    continue;
+                }
 
                 cout << "Enter multiplier: ";
-                cin >> multiplier;
+                if (!readNumber(multiplier)) {
+                    cout << "Invalid numeric input." << endl;
+                    continue;
+                }
 
                 DynamicSIPStrategy strategy(dipThreshold, rallyThreshold, multiplier);
                 SimResult result = strategy.backtest(history, monthlyCapital, startYear, endYear);
@@ -548,10 +642,16 @@ int main() {
                 int longWindow;
 
                 cout << "Enter short MA window, usually 50: ";
-                cin >> shortWindow;
+                if (!readNumber(shortWindow)) {
+                    cout << "Invalid numeric input." << endl;
+                    continue;
+                }
 
                 cout << "Enter long MA window, usually 200: ";
-                cin >> longWindow;
+                if (!readNumber(longWindow)) {
+                    cout << "Invalid numeric input." << endl;
+                    continue;
+                }
 
                 GoldenCrossStrategy strategy(shortWindow, longWindow);
                 SimResult result = strategy.backtest(history, monthlyCapital, startYear, endYear);
@@ -563,10 +663,16 @@ int main() {
                 int lookbackDays;
 
                 cout << "Enter momentum threshold percent, example 5: ";
-                cin >> threshold;
+                if (!readNumber(threshold)) {
+                    cout << "Invalid numeric input." << endl;
+                    continue;
+                }
 
                 cout << "Enter lookback trading days, example 126: ";
-                cin >> lookbackDays;
+                if (!readNumber(lookbackDays)) {
+                    cout << "Invalid numeric input." << endl;
+                    continue;
+                }
 
                 MomentumStrategy strategy(threshold, lookbackDays);
                 SimResult result = strategy.backtest(history, monthlyCapital, startYear, endYear);
@@ -591,13 +697,27 @@ int main() {
             int endYear;
 
             cout << "Enter monthly capital: ";
-            cin >> monthlyCapital;
+            if (!readNumber(monthlyCapital)) {
+                cout << "Invalid numeric input." << endl;
+                continue;
+            }
+
+            if (monthlyCapital <= 0.0) {
+                cout << "Monthly capital must be positive." << endl;
+                continue;
+            }
 
             cout << "Enter start year: ";
-            cin >> startYear;
+            if (!readNumber(startYear)) {
+                cout << "Invalid numeric input." << endl;
+                continue;
+            }
 
             cout << "Enter end year: ";
-            cin >> endYear;
+            if (!readNumber(endYear)) {
+                cout << "Invalid numeric input." << endl;
+                continue;
+            }
 
             FixedSIPStrategy fixed;
             DynamicSIPStrategy dynamic(10.0, 20.0, 2.0);
@@ -656,13 +776,27 @@ int main() {
             int endYear;
 
             cout << "Enter monthly capital: ";
-            cin >> monthlyCapital;
+            if (!readNumber(monthlyCapital)) {
+                cout << "Invalid numeric input." << endl;
+                continue;
+            }
+
+            if (monthlyCapital <= 0.0) {
+                cout << "Monthly capital must be positive." << endl;
+                continue;
+            }
 
             cout << "Enter start year: ";
-            cin >> startYear;
+            if (!readNumber(startYear)) {
+                cout << "Invalid numeric input." << endl;
+                continue;
+            }
 
             cout << "Enter end year: ";
-            cin >> endYear;
+            if (!readNumber(endYear)) {
+                cout << "Invalid numeric input." << endl;
+                continue;
+            }
 
             StockBST sweepBST;
 
