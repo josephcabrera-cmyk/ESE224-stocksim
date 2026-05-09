@@ -5,7 +5,10 @@ endYear               = 2020
 ticker                = SPX
 
 Algorithm Description :
-The strategy compares the current monthly close on the first trading day against the prior 12 monthly closes. If the price is down at least 14.2% from the "rolling high", it invests 3 times the normal monthly capital. If the price increases at least 5.5% from the "rolling low", it reduces the monthly spend by half. Leftover money is carried over, and the final month uses the remaining budget.
+The strategy compares the current monthly close on the first trading day against the prior 12 monthly closes. 
+If the price is down at least 14.2% from the "rolling high", it invests 3 times the normal monthly capital. 
+If the price increases at least 5.5% from the "rolling low", it reduces the monthly spend by half. Leftover money 
+is carried over, and the final month uses the remaining budget.
 
 Parameters Used       :
 dipThreshold           = 14.2%
