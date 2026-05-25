@@ -111,11 +111,10 @@ SimResult GoldenCrossStrategy::backtest(PriceHistory* history,
             lastContributionYear = year;
             lastContributionMonth = month;
 
-            // If already in position, invest the new monthly cash immediately
+            // If already in position, invest new monthly cash without counting a new crossover trade.
             if (inPosition && cash > 0.0 && closePrice > 0.0) {
                 shares += cash / closePrice;
                 cash = 0.0;
-                result.totalTrades++;
             }
         }
 

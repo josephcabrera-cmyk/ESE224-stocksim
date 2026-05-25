@@ -63,6 +63,23 @@ double monthlyCapital, int startYear, int endYear) {
     }
 
     if (hasPortfolioValue) {
+        double finalPrice = 0.0;
+
+        for (PriceHistory::ReverseIterator it = history->rbegin(); it != history->rend(); ++it) {
+            PriceNode& node = *it;
+            int year = stoi(node.date.substr(0, 4));
+
+            if (year >= startYear && year < endYear) {
+                finalPrice = node.close;
+                break;
+            }
+        }
+
+        if (finalPrice > 0.0) {
+            result.finalValue = shares * finalPrice;
+            updateMaxDrawdown(result.finalValue, peakValue, maxDrawdown);
+        }
+
         result.maxDrawdown = maxDrawdown;
         if (result.totalInvested > 0.0) {
             result.totalReturn = (result.finalValue - result.totalInvested) / result.totalInvested * 100.0;
