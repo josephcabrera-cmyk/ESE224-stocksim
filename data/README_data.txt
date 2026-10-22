@@ -1,33 +1,22 @@
-How to download the required CSV data files
-===========================================
+Data files
+==========
 
-This project uses historical stock data from Yahoo Finance (free, no login required).
+Daily price history from Yahoo Finance, one CSV file per symbol. The program
+reads all three when you choose "[1] Load stock data from CSV" in the main menu.
 
-For each ticker below, follow these steps:
+  SPX.csv                    S&P 500 index   1927-12-30 to 2020-11-04
+  AMZN.csv                   Amazon          1997-05-15 to 2022-03-24
+  NVidia_stock_history.csv   NVIDIA          1999-01-22 to 2026-04-13
 
-1. Go to: https://finance.yahoo.com
-2. Search for the ticker symbol in the search bar
-3. Click on the result, then select the "Historical Data" tab
-4. Set Time Period to "Max" (this gives the full available history)
-5. Set Frequency to "Daily"
-6. Click "Apply", then "Download"
-7. Rename the downloaded file as shown below and place it in this data/ folder
+SPX.csv and AMZN.csv use Yahoo Finance's export column order:
 
-Required files:
----------------
-  SPY.csv    (S&P 500 ETF Trust — primary dataset, ~25 years)
-  AAPL.csv   (Apple Inc.)
-  TSLA.csv   (Tesla Inc. — note: only available from mid-2010)
-
-Expected CSV format (Yahoo Finance default):
---------------------------------------------
   Date,Open,High,Low,Close,Adj Close,Volume
-  2000-01-03,148.25,148.25,143.88,145.44,111.55,8164300
-  ...
 
-Your CSVParser::loadHistory() must:
-  - Skip the first (header) row
-  - Use the "Close" column (index 4) as the closing price
-  - Handle missing/null values gracefully (skip the row)
-  - Work correctly even if date ranges differ across files
-    (TSLA starts in 2010; SPY starts in 1993)
+NVidia_stock_history.csv has the same columns in a different order:
+
+  Date,Adj Close,Close,High,Low,Open,Volume
+
+CSVParser finds each column by its header name, so the order doesn't matter.
+It needs Date, Open, High, Low, Close and Volume, uses Close as the closing
+price (Adj Close is ignored), skips rows it can't parse, and keeps only dates
+from 2000-01-01 to 2020-01-01, so all three symbols cover the same 20 years.
